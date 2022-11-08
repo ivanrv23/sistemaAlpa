@@ -10,9 +10,14 @@ use App\Models\Coin;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Customizer;
+use App\Models\Document;
 use App\Models\Mark;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\PaymentMethod;
 use App\Models\Presentation;
 use App\Models\Product;
+use App\Models\ProofPayment;
 use App\Models\QuotationDetail;
 use App\Models\Warehouse;
 use Exception;
@@ -33,28 +38,32 @@ class QuotationController extends Controller
         $company = Auth::user()->companies_id;
 
         return Inertia::render('Quotations/Index', [
-            'quotations' => Quotation::where('companies_id', $company)->get()->map(function ($p) {
+            'orders' => Order::where('companies_id', $company)->where('proof_payments_id' , 4 )->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
                     'companies_id' => $p->companies_id,
                     'company_name' => Company::find($p->companies_id)->name,
-                    'coins_id' => $p->coins_id,
-                    'coin' => Coin::find($p->coins_id)->code,
                     'customers_id' => $p->customers_id,
                     'customers_name' => Customer::find($p->customers_id)->name,
+                    'payment_methods_id' => $p->payment_methods_id,
+                    'payment_method' => PaymentMethod::find($p->payment_methods_id)->description,
+                    'proof_payments_id' => $p->proof_payments_id,
+                    'proof_payment' => ProofPayment::find($p->proof_payments_id)->name,
+                    'coins_id' => $p->coins_id,
+                    'coin' => Coin::find($p->coins_id)->code,
+                    'documents_id' => $p->documents_id,
+                    'documents_name' => Document::find($p->documents_id)->name,
                     'voucher_number' => $p->voucher_number,
                     'exchange_rate' => $p->exchange_rate,
-                    'description' => $p->description,
                     'total' => $p->total,
                     'date' => $p->date,
                     'state' => $p->state,
-                    'state_name' => $p->state == 1 ? 'Aprobado' : 'Cotizado',
-                    'tipo_igv' => $p->igv,
-                    'details' => QuotationDetail::where('quotations_id', $p->id)->get()->map(function ($d) {
+                    'state_name' => $p->state == 1 ? 'Registrado' : 'Pendiente',
+                    'description' => $p->description,
+                    'details' => OrderDetail::where('orders_id', $p->id)->get()->map(function ($d) {
                         return [
                             'id' => $d->id,
-                            'companies_id' => $d->companies_id,
-                            'quotations_id' => $d->quotations_id,
+                            'orders_id' => $d->orders_id,
                             'products_id' => $d->products_id,
                             'product_name' => Product::find($d->products_id)->name,
                             'mark_name' => Mark::find(Product::find($d->products_id)->marks_id)->name,

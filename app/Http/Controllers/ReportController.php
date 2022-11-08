@@ -58,12 +58,12 @@ class ReportController extends Controller
         $totalVentasDiaDolares = 0;
         $total_pen_usd = 0;
 
-        $total_pen = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 1)->get();
+        $total_pen = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4 )->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 1)->get();
 
         foreach ($total_pen as $key => $p) {
             $totalVentasDiaSoles += $p->total;
         }
-        $total_usd = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 2)->get();
+        $total_usd = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4 )->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 2)->get();
 
         foreach ($total_usd as $key => $p) {
             $totalVentasDiaDolares += ($p->total * $p->exchange_rate);
@@ -105,7 +105,7 @@ class ReportController extends Controller
             // Datos Ventas
             'totalVentas' => number_format((round($total_pen_usd)), 2),
             'totalPrecioCompra' => number_format((round($total_pen_usd - $total_ganancia)), 2),
-            'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
+            'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // N° Compras
             'totalCompras' => number_format((round($totalC_pen_usd)), 2),
             // N° Productos
@@ -115,7 +115,7 @@ class ReportController extends Controller
             'dateInicio'=>$DateAndTimeInicio,
             'dateFin'=>$DateAndTimeFin,
             // lista Ventas
-            'orders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->get()->map(function ($p) {
+            'orders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4 )->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
                     'companies_id' => $p->companies_id,

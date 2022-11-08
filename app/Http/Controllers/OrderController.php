@@ -43,7 +43,7 @@ class OrderController extends Controller
         $company = Auth::user()->companies_id;
 
         return Inertia::render('Orders/Index', [
-            'orders' => Order::where('companies_id', $company)->get()->map(function ($p) {
+            'orders' => Order::where('companies_id', $company)->where('proof_payments_id', '!=' , 4 )->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
                     'companies_id' => $p->companies_id,
@@ -123,6 +123,7 @@ class OrderController extends Controller
             'nroComprobantes' => sprintf("%08d", Order::where('companies_id', $company)->where('proof_payments_id', 1)->count() + 1),
             'nroFacturas' => sprintf("%08d", Order::where('companies_id', $company)->where('proof_payments_id', 2)->count() + 1),
             'nroBoletas' => sprintf("%08d", Order::where('companies_id', $company)->where('proof_payments_id', 3)->count() + 1),
+            'nroCotizacion' => sprintf("%08d", Order::where('companies_id', $company)->where('proof_payments_id', 4)->count() + 1),
             'products' => Product::where('companies_id', $company)->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
@@ -194,13 +195,17 @@ class OrderController extends Controller
             $order_details->subTotal = $value['subTotal'];
 
             $order_details->save();
-            $cant = $value['quantity'] * $value['equivalence'];
-            if ($value['type'] == 'Producto') {
-                $stockProducto->update([
-                    $stockProducto->stock -= $cant
-                ]);
+            // Actualizar Stock
+            if ($order->proof_payments_id != 4) {
+                $cant = $value['quantity'] * $value['equivalence'];
+                if ($value['type'] == 'Producto') {
+                    $stockProducto->update([
+                        $stockProducto->stock -= $cant
+                    ]);
+                }
             }
         }
+        // Cuentas por cobrar
         if ($request->totalPago < $request->total) {
             $accountReceivable = new AccountReceivable();
             $accountReceivable->companies_id = $request->companies_id;
@@ -209,6 +214,7 @@ class OrderController extends Controller
             $accountReceivable->debt = $request->total - $request->totalPago;
             $accountReceivable->save();
         }
+        // Añadir cuotas
         if ($request->nroQuotas > 0) {
             $quotas = $request->quotasVenta;
             foreach ($quotas as $key => $value) {
@@ -219,29 +225,35 @@ class OrderController extends Controller
                 $quota->save();
             }
         }
-        $pettyCash = PettyCash::where('companies_id', $request->companies_id)->where('state', 1)->get();
-        if ($request->cajaChica == 1 && $request->coins_id == 1) {
-            $pettyCash[0]->update([
-                $pettyCash[0]->amount_pen += $request->totalPago,
-            ]);
-        } else {
-            if ($request->cajaChica == 1 && $request->coins_id == 2) {
+        // Monto a caja General
+        if ($order->proof_payments_id != 4) {
+            $pettyCash = PettyCash::where('companies_id', $request->companies_id)->where('state', 1)->get();
+            if ($request->cajaChica == 1 && $request->coins_id == 1) {
                 $pettyCash[0]->update([
-                    $pettyCash[0]->amount_usd += $request->totalPago,
+                    $pettyCash[0]->amount_pen += $request->totalPago,
                 ]);
+            } else {
+                if ($request->cajaChica == 1 && $request->coins_id == 2) {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_usd += $request->totalPago,
+                    ]);
+                }
             }
         }
+
         // Agregar monto segun caja seleccionada
-        $cashRegister = CashRegister::where('companies_id', $request->companies_id)->where('id', $request->cash_registers_id)->get();
-        if ($request->coins_id == 1) {
-            $cashRegister[0]->update([
-                $cashRegister[0]->amount_pen += $request->totalPago,
-            ]);
-        } else {
-            if ($request->coins_id == 2) {
+        if ($order->proof_payments_id != 4) {
+            $cashRegister = CashRegister::where('companies_id', $request->companies_id)->where('id', $request->cash_registers_id)->get();
+            if ($request->coins_id == 1) {
                 $cashRegister[0]->update([
-                    $cashRegister[0]->amount_usd += $request->totalPago,
+                    $cashRegister[0]->amount_pen += $request->totalPago,
                 ]);
+            } else {
+                if ($request->coins_id == 2) {
+                    $cashRegister[0]->update([
+                        $cashRegister[0]->amount_usd += $request->totalPago,
+                    ]);
+                }
             }
         }
         // imprimir Comprobante
@@ -264,8 +276,13 @@ class OrderController extends Controller
         //     $print = new PrintController($order->id);
         //     // PrintController::class;
         // }
+        if ($order->proof_payments_id != 4) {
+            return Redirect::route('orders.index')->with('message', 'Venta agregada');
+        }else{
+            return Redirect::route('quotations.index')->with('message', 'Cotización Generada');
+        }
 
-        return Redirect::route('orders.index')->with('message', 'Venta agregada');
+        
     }
 
     /**
