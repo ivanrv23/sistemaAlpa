@@ -38,7 +38,7 @@ class QuotationController extends Controller
         $company = Auth::user()->companies_id;
 
         return Inertia::render('Quotations/Index', [
-            'orders' => Order::where('companies_id', $company)->where('proof_payments_id' , 4 )->get()->map(function ($p) {
+            'quotations' => Order::where('companies_id', $company)->where('proof_payments_id' , 4 )->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
                     'companies_id' => $p->companies_id,
@@ -227,7 +227,7 @@ class QuotationController extends Controller
     public function exportCotizacion()
     {
         $id = $_REQUEST['id'];
-        $voucher_number = Quotation::find($id)->voucher_number;
+        $voucher_number = Order::find($id)->voucher_number;
         return Excel::download(new QuotationsExport, 'Cotizacion Nro. ' . $voucher_number . '.xlsx');
     }
 }

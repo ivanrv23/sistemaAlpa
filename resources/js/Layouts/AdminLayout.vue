@@ -275,7 +275,7 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <inertia-link :href="route('quotations.create')">
+                                    <!-- <inertia-link :href="route('quotations.create')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -285,7 +285,7 @@
                                                 <h5>NUEVA COTIZACIÓN</h5>
                                             </v-list-item-title>
                                         </v-list-item>
-                                    </inertia-link>
+                                    </inertia-link> -->
 
                                     <inertia-link :href="route('quotations.index')">
                                         <v-list-item link :style="item_style()">

@@ -146,7 +146,7 @@ $medidaTicket = 180;
         </tr>
         <tr>
             <td>Total:</td>
-            <td> {{ round($total + $igvs) }}</td>
+            <td> {{ $total + $igvs }}</td>
         </tr>
     </table>
 

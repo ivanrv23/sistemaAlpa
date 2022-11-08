@@ -488,7 +488,8 @@
                                             </v-btn>
                                         </template>
                                         <v-card>
-                                            <v-card-title v-if="tipoComprobate.code != 'C01'" class="text-h5 grey lighten-2">
+                                            <v-card-title v-if="tipoComprobate.code != 'C01'"
+                                                class="text-h5 grey lighten-2">
                                                 DATOS DE VENTA
                                             </v-card-title>
                                             <v-card-title v-else class="text-h5 grey lighten-2">
@@ -503,7 +504,8 @@
                                                             </v-text-field>
                                                         </v-col>
 
-                                                        <v-col cols="12" md="6" v-if="tipoComprobate.code != 'C01'" v-show="true">
+                                                        <v-col cols="12" md="6" v-if="tipoComprobate.code != 'C01'"
+                                                            v-show="true">
                                                             <v-text-field type="number" label="Monto a pagar"
                                                                 v-model="pagoVenta" :prefix="simboloMoneda" min="0"
                                                                 :max="this.form.total" required>
@@ -523,7 +525,8 @@
                                                 <!-- <v-btn color="green" text @click="send_form(1)">
                                                     Pagar e imprimir
                                                 </v-btn> -->
-                                                <v-btn v-if="tipoComprobate.code != 'C01'" color="primary" text @click="send_form">
+                                                <v-btn v-if="tipoComprobate.code != 'C01'" color="primary" text
+                                                    @click="send_form">
                                                     Pagar
                                                 </v-btn>
                                                 <v-btn v-else color="primary" text @click="send_form">
@@ -877,11 +880,13 @@ export default {
         save() {
             if (this.editedIndex > -1) {
                 var stk = this.editedItem.quantity * this.editedItem.equivalence
-                if (this.editedItem.datosProducto.stock < stk) {
-                    this.snackbar_text = 'Sin Stock';
-                    this.snackbar_color = 'lime accent-4';
-                    this.snackbar = true;
-                    return;
+                if (this.tipoComprobate.code != 'C01') {
+                    if (this.editedItem.datosProducto.stock < stk) {
+                        this.snackbar_text = 'Sin Stock';
+                        this.snackbar_color = 'lime accent-4';
+                        this.snackbar = true;
+                        return;
+                    }
                 }
                 var totItem = this.editedItem.quantity * this.editedItem.sale_price
                 if (this.editedItem.discount > totItem) {
@@ -937,11 +942,13 @@ export default {
                 this.close()
             } else {
                 var stk = this.editedItem.quantity * this.editedItem.equivalence
-                if (this.editedItem.datosProducto.stock < stk) {
-                    this.snackbar_text = 'Sin Stock';
-                    this.snackbar_color = 'lime accent-4';
-                    this.snackbar = true;
-                    return;
+                if (this.tipoComprobate.code != 'C01') {
+                    if (this.editedItem.datosProducto.stock < stk) {
+                        this.snackbar_text = 'Sin Stock';
+                        this.snackbar_color = 'lime accent-4';
+                        this.snackbar = true;
+                        return;
+                    }
                 }
                 var totItem = this.editedItem.quantity * this.editedItem.sale_price
                 if (this.editedItem.discount > totItem) {
