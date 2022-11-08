@@ -68,7 +68,7 @@ class ReportController extends Controller
         foreach ($total_usd as $key => $p) {
             $totalVentasDiaDolares += ($p->total * $p->exchange_rate);
         }
-        $total_pen_usd = ($totalVentasDiaSoles + round($totalVentasDiaDolares));
+        $total_pen_usd = ($totalVentasDiaSoles + $totalVentasDiaDolares);
 
         // COMPRAS
         $totalComprasDiaSoles = 0;
@@ -85,7 +85,7 @@ class ReportController extends Controller
         foreach ($totalC_usd as $key => $p) {
             $totalComprasDiaDolares += ($p->total * $p->exchange_rate);
         }
-        $totalC_pen_usd = ($totalComprasDiaSoles + round($totalComprasDiaDolares));
+        $totalC_pen_usd = ($totalComprasDiaSoles + $totalComprasDiaDolares);
 
         // PRODUCTOS
         $totInversion = 0;
@@ -105,9 +105,9 @@ class ReportController extends Controller
             // Datos Ventas
             'totalVentas' => number_format((round($total_pen_usd)), 2),
             'totalPrecioCompra' => number_format((round($total_pen_usd - $total_ganancia)), 2),
-            'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
+            'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // N° Compras
-            'totalCompras' => number_format((round($totalC_pen_usd)), 2),
+            'totalCompras' => number_format($totalC_pen_usd, 2),
             // N° Productos
             'totProducts' => Product::where('companies_id', $company)->count(),
             'inversionTotal' => number_format($totInversion, 2),
