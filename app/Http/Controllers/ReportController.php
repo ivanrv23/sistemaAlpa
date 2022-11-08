@@ -103,8 +103,8 @@ class ReportController extends Controller
         }
         return Inertia::render('Reports/Index', [
             // Datos Ventas
-            'totalVentas' => number_format((round($total_pen_usd)), 2),
-            'totalPrecioCompra' => number_format((round($total_pen_usd - $total_ganancia)), 2),
+            'totalVentas' => number_format($total_pen_usd, 2),
+            'totalPrecioCompra' => number_format($total_pen_usd - $total_ganancia, 2),
             'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // N° Compras
             'totalCompras' => number_format($totalC_pen_usd, 2),
