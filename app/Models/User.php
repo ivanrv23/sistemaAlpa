@@ -11,21 +11,24 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
 use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
+
 // Spatie package
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use LaravelPermissionToVueJS;
-    // Spatie package
-    use HasRoles;
+
     
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-
+    
+    // Spatie package
+    use HasRoles;
+    
     /**
      * The attributes that are mass assignable.
      *

@@ -19,6 +19,13 @@ use Inertia\Inertia;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Empresas')->only('index');
+        $this->middleware('can:Guardar Empresa')->only('store');
+        $this->middleware('can:Actualizar Empresa')->only('update');
+        $this->middleware('can:Eliminar Empresa')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
