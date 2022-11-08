@@ -265,7 +265,7 @@
                             </v-card>
                         </v-list-group>
 
-                        <v-list-group :style="item_style()" v-if="$page.props.user.role != 'seller'">
+                        <v-list-group :style="item_style()">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-file-document-edit</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">

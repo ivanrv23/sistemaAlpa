@@ -219,7 +219,7 @@ class QuotationController extends Controller
      */
     public function destroy($id)
     {
-        $quotation = Quotation::find($id);
+        $quotation = Order::find($id);
         $quotation->delete();
         return Redirect::route('quotations.index')->with('message', 'Cotización eliminada');
     }
