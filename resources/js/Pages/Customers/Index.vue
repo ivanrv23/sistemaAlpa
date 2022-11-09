@@ -32,13 +32,8 @@
                                 Agregar Cliente
                             </v-btn>
                             <v-spacer></v-spacer>
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            label="Buscar"
-                            single-line
-                            hide-details
-                        ></v-text-field>
+                            <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar" single-line
+                                hide-details></v-text-field>
                         </template>
                         <v-card>
                             <!-- Titulo de modal agregar  -->
@@ -61,13 +56,13 @@
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.document" type="number" label="DNI/RUC*" min="0"
-                                                :rules="requiredDocument" required>
+                                            <v-text-field v-model="editedItem.document" type="number" label="DNI/RUC*"
+                                                min="0" :rules="requiredDocument" required>
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.phone" type="number" label="Teléfono" min="0"
-                                                required>
+                                            <v-text-field v-model="editedItem.phone" type="number" label="Teléfono"
+                                                min="0" required>
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
@@ -102,7 +97,9 @@
                             <v-card-title class="text-h5">
                                 ¿Está seguro de querer borrar el Cliente?
                             </v-card-title>
-
+                            <div class="ml-12">
+                                • Se borrará toda información relacionada con el Cliente
+                            </div>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="red darken-1" text @click="closeDelete">Cancelar</v-btn>
@@ -158,7 +155,7 @@ export default {
                 { text: 'NOMBRE', value: 'name' },
                 { text: 'DOCUMENTO', value: 'document' },
                 { text: 'TELÉFONO', value: 'phone' },
-                { text: 'DIRECCIÓN', value: 'address' },                
+                { text: 'DIRECCIÓN', value: 'address' },
                 { text: 'CORREO', value: 'email' },
                 { text: 'ACCIONES', value: 'actions', sortable: false },
             ],
@@ -169,7 +166,7 @@ export default {
             editedItem: {
                 companies_id: this.$page.props.user.companies_id,
                 name: '',
-                document: '',                
+                document: '',
                 phone: '',
                 address: '',
                 email: '',
@@ -178,7 +175,7 @@ export default {
             defaultItem: {
                 companies_id: this.$page.props.user.companies_id,
                 name: '',
-                document: '',                
+                document: '',
                 phone: '',
                 address: '',
                 email: '',

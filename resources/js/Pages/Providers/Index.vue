@@ -109,6 +109,9 @@
                             <v-card-title class="text-h5">
                                 ¿Está seguro de querer borrar el Proveedor?
                             </v-card-title>
+                            <div class="ml-12">
+                                • Se borrará toda información relacionada con el Proveedor
+                            </div>
 
                             <v-card-actions>
                                 <v-spacer></v-spacer>

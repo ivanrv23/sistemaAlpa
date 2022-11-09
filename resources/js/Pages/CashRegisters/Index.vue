@@ -101,6 +101,9 @@
                     <v-dialog v-model="dialogDelete" max-width="500px">
                         <v-card>
                             <v-card-title class="text-h5">Está seguro que desea eliminar?</v-card-title>
+                            <div class="ml-12">
+                                • Se borrará toda información relacionada con la Caja
+                            </div>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
 
