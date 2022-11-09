@@ -89,8 +89,9 @@ $medidaTicket = 180;
         <h1>{{ $company->name }}</h1>
         <h2>R.U.C. {{ $company->ruc }}</h2>
         <h6>Dirección: {{ $company->address }}</h6>
-        <h6>Teléfono: {{ $company->phone }}</h6>
+        <h6>Teléfono: {{ $company->phone }}</h6>        
         <h6>Fecha: {{ $order->date }}</h6>
+        <h6>Cliente: {{ $customers_name }}</h6>
 
         <h3><?php
         $comprobante = $order->proof_payments_id;

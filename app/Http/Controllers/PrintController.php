@@ -31,6 +31,7 @@ class PrintController extends Controller
         $customizer = Customizer::where('companies_id', Auth::user()->companies_id)->get()[0];
         $total = 0;        
         $order = Order::find($id); // Buscando venta
+        $customers_name=Customer::find($order->customers_id)->name;
         $order_details = OrderDetail::where('orders_id', $order->id)->get()->map(function ($o)
         {
             return [
@@ -46,7 +47,7 @@ class PrintController extends Controller
         
         // return  $order_details;      
         // return view('pdf.invoice', compact('order', 'order_details', 'company', 'customizer'));
-        $pdf = Pdf::setPaper([0,0,226.772,1500], 'portrait')->loadView('pdf.ventas', compact('order', 'order_details', 'company', 'customizer', 'total'));
+        $pdf = Pdf::setPaper([0,0,226.772,1500], 'portrait')->loadView('pdf.ventas', compact('order', 'order_details', 'company', 'customizer', 'total','customers_name'));
         
         // return $pdf->download('invoice.pdf');
         return $pdf->stream('Ventas.pdf');

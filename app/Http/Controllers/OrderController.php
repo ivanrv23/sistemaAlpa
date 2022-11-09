@@ -43,7 +43,7 @@ class OrderController extends Controller
         $company = Auth::user()->companies_id;
 
         return Inertia::render('Orders/Index', [
-            'orders' => Order::where('companies_id', $company)->where('proof_payments_id', '!=' , 4 )->get()->map(function ($p) {
+            'orders' => Order::where('companies_id', $company)->where('proof_payments_id', '!=', 4)->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
                     'companies_id' => $p->companies_id,
@@ -160,25 +160,51 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+        $newCustomer = new Customer();
         $order = new Order();
-
-        $order->companies_id = $request->companies_id;
-        $order->customers_id = $request->customers_id;
-        $order->payment_methods_id = $request->payment_methods_id;
-        $order->proof_payments_id = $request->proof_payments_id;
-        $order->coins_id = $request->coins_id;
-        $order->documents_id = $request->documents_id;
-        $order->cash_registers_id = $request->cash_registers_id;
-        $order->voucher_number = $request->voucher_number;
-        $order->exchange_rate = $request->exchange_rate;
-        $order->total = $request->total;
-        $order->date = $request->date;
-        $order->description = $request->description;
-        if ($request->totalPago < $request->total) {
-            $order->state = 0;
+        // Registrar nuevo cli8ente
+        if ($request->newCustomer == 1) {
+            $newCustomer->companies_id = $request->companies_id;
+            $newCustomer->name = $request->newNameR;
+            $newCustomer->document = $request->newDocument;
+            $newCustomer->address = $request->newAddress;
+            $newCustomer->save();
+            // venta con nuevo cliente
+            $order->companies_id = $request->companies_id;
+            $order->customers_id = $newCustomer->id;
+            $order->payment_methods_id = $request->payment_methods_id;
+            $order->proof_payments_id = $request->proof_payments_id;
+            $order->coins_id = $request->coins_id;
+            $order->documents_id = $request->documents_id;
+            $order->cash_registers_id = $request->cash_registers_id;
+            $order->voucher_number = $request->voucher_number;
+            $order->exchange_rate = $request->exchange_rate;
+            $order->total = $request->total;
+            $order->date = $request->date;
+            $order->description = $request->description;
+            if ($request->totalPago < $request->total) {
+                $order->state = 0;
+            }
+            $order->save();
+        } else {
+            $order->companies_id = $request->companies_id;
+            $order->customers_id = $request->customers_id;
+            $order->payment_methods_id = $request->payment_methods_id;
+            $order->proof_payments_id = $request->proof_payments_id;
+            $order->coins_id = $request->coins_id;
+            $order->documents_id = $request->documents_id;
+            $order->cash_registers_id = $request->cash_registers_id;
+            $order->voucher_number = $request->voucher_number;
+            $order->exchange_rate = $request->exchange_rate;
+            $order->total = $request->total;
+            $order->date = $request->date;
+            $order->description = $request->description;
+            if ($request->totalPago < $request->total) {
+                $order->state = 0;
+            }
+            $order->save();
         }
-        $order->save();
-
+        // Registro nuevo cliente
         $products = $request->products;
         foreach ($products as $key => $value) {
             $order_details = new orderDetail();
@@ -277,12 +303,10 @@ class OrderController extends Controller
         //     // PrintController::class;
         // }
         if ($order->proof_payments_id != 4) {
-            return Redirect::route('orders.index')->with('message', 'Venta agregada');
-        }else{
+            return Redirect::route('orders.index')->with('message', 'Venta Agregada');
+        } else {
             return Redirect::route('quotations.index')->with('message', 'Cotización Generada');
         }
-
-        
     }
 
     /**

@@ -57,34 +57,49 @@
                                         <v-text-field label="Fecha" v-model="form.date" readonly outlined dense>
                                         </v-text-field>
                                     </v-col>
-                                    <v-col cols="12">
+                                    <v-col cols="5">
                                         <h3>DATOS CLIENTE</h3>
+                                    </v-col>
+                                    <v-col cols="7" sm="7" md="7">
+                                        <v-switch class="mt-0" v-model="newCustomer" label="Nuevo Cliente">
+                                        </v-switch>
                                     </v-col>
                                     <v-col class="d-flex" cols="12" sm="2" md="2">
                                         <v-select :items="documents" label="Tipo Documento" item-text="name"
                                             item-value="code" v-model="tipoDoc" return-object outlined dense>
                                         </v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="3" md="3">
-                                        <v-autocomplete color="primary" :items="customers" item-text="document"
+                                    <v-col v-if="newCustomer == 0" cols="12" sm="3" md="3">
+                                        <v-autocomplete color="primary" :items="customers" :item-text="getCustomerText"
                                             v-model="datosCliente" item-value="id" label="Cliente" auto-select-first
-                                            hide-no-data hide-selected placeholder="Buscar por Documento"
-                                            persistent-hint return-object required outlined dense>
+                                            hide-no-data hide-selected placeholder="Buscar Cliente" persistent-hint
+                                            return-object required outlined dense>
                                         </v-autocomplete>
-                                        <!-- <v-autocomplete v-if="tipoDoc.name == 'DNI'" color="primary" :items="customers"
-                                            item-text="document" v-model="datosCliente" item-value="id" label="Cliente"
-                                            auto-select-first hide-no-data hide-selected placeholder="Buscar por Nombre"
-                                            persistent-hint return-object required>
-                                        </v-autocomplete> -->
                                     </v-col>
-                                    <v-col cols="12" sm="4" md="4">
+                                    <v-col cols="12" sm="3" md="3" v-if="newCustomer == 1">
+                                        <v-text-field type="number" label="Documento"
+                                            placeholder="N° Documento (opcional)" v-model="newDocument" required
+                                            outlined dense>
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col v-if="newCustomer == 0" cols="12" sm="4" md="4">
                                         <v-text-field label="Nombre/Razon Social" :value="datosCliente.name" readonly
                                             outlined dense>
                                         </v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="3" md="3">
+                                    <v-col v-if="newCustomer == 1" cols="12" sm="4" md="4">
+                                        <v-text-field label="Nombre/Razon Social*" v-model="newNameR" outlined dense
+                                            placeholder="Campo Obligatorio">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col v-if="newCustomer == 0" cols="12" sm="3" md="3">
                                         <v-text-field label="Dirección" :value="datosCliente.address" readonly outlined
                                             dense>
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col v-if="newCustomer == 1" cols="12" sm="3" md="3">
+                                        <v-text-field label="Dirección" outlined v-model="newAddress" dense
+                                            placeholder="Dirección (opcional)">
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="12">
@@ -594,6 +609,10 @@ export default {
             simboloMoneda: 'S/',
             pagoVenta: 0,
             tipoCambio: this.exchange_rate,
+            newCustomer: 0,
+            newDocument: '',
+            newNameR: '',
+            newAddress: '',
             form: {
                 companies_id: this.$page.props.user.companies_id,
                 proof_payments_id: '',
@@ -614,6 +633,10 @@ export default {
                 totalPago: 0,
                 // print: 0,
                 cajaChica: 0,
+                newCustomer: '',
+                newDocument: '',
+                newNameR: '',
+                newAddress: '',
             },
             editedIndexQuotas: -1,
             quotasHeaders: [
@@ -713,6 +736,10 @@ export default {
         initialize() {
             this.desserts = []
         },
+        getCustomerText(item) {
+            return `${item.document} - ${item.name}`;
+        },
+
         getProductText(item) {
             return `${item.bar_code} - ${item.name} - ${item.marks_name} - ${item.warehouses_name}`;
         },
@@ -1035,19 +1062,37 @@ export default {
             this.form.quotasVenta = this.quotas
             this.form.nroQuotas = this.quotas.length
 
+            // datos nuevo cliente
+            this.form.newCustomer=this.newCustomer
+            this.form.newDocument=this.newDocument
+            this.form.newNameR=this.newNameR
+            this.form.newAddress=this.newAddress
+
             if (this.form.products == '') {
                 this.snackbar_text = 'Carrito Vacio';
                 this.snackbar_color = 'amber lighten-1';
                 this.snackbar = true;
                 return;
             }
-            if (this.datosCliente == '') {
-                this.datosCliente = this.customers[0]
-                this.snackbar_text = 'Datos de Cliente Vacio';
-                this.snackbar_color = 'green darken-1';
-                this.snackbar = true;
-                return;
+            if (this.newCustomer == 0) {
+                if (this.datosCliente == '') {
+                    this.datosCliente = this.customers[0]
+                    this.snackbar_text = 'Datos de Cliente Vacio';
+                    this.snackbar_color = 'green darken-1';
+                    this.snackbar = true;
+                    return;
+                }
             }
+            if (this.newCustomer == 1) {
+                if (this.newNameR == '') {
+                    this.snackbar_text = 'Cliente Vacio';
+                    this.snackbar_color = 'green darken-1';
+                    this.snackbar = true;
+                    return;
+                }
+            }
+
+
 
             // Validar Si algun dato del form es nulo o cacio
             // const isEmpty = Object.values(this.form).some(x => (x === ''))
