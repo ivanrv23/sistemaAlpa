@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProviderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Proveedores')->only('index');
+        $this->middleware('can:Guardar Proveedor')->only('store');
+        $this->middleware('can:Actualizar Proveedor')->only('update');
+        $this->middleware('can:Eliminar Proveedor')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

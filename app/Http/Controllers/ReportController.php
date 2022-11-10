@@ -17,15 +17,18 @@ use App\Models\ProofPayment;
 use App\Models\Provider;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
-use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Inertia\Inertia;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class ReportController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Reportes')->only('index');
+    } 
+
     /**
      * Display a listing of the resource.
      *

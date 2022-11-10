@@ -14,6 +14,14 @@ use Inertia\Inertia;
 
 class PettyCashController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Caja general')->only('index');
+        $this->middleware('can:Guardar Caja general')->only('store');
+        $this->middleware('can:Actualizar Caja general')->only('update');
+        $this->middleware('can:Eliminar Caja general')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *

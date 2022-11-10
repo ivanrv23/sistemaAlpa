@@ -27,6 +27,15 @@ use Illuminate\Support\Facades\Redirect;
 
 class PurchaseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Compras')->only('index');
+        $this->middleware('can:Agregar Compra')->only('create');
+        $this->middleware('can:Guardar Compra')->only('store');
+        $this->middleware('can:Actualizar Compra')->only('update');
+        $this->middleware('can:Eliminar Compra')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -282,28 +291,6 @@ class PurchaseController extends Controller
 
 
         return Redirect::route('purchases.index')->with('message', 'Compra agregada');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Purchase  $purchase
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Purchase $purchase)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Purchase  $purchase
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Purchase $purchase)
-    {
-        //
     }
 
     /**

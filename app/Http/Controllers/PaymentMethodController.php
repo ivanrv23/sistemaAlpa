@@ -13,6 +13,15 @@ use Inertia\Inertia;
 
 class PaymentMethodController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Metodos de pago')->only('index');
+        $this->middleware('can:Guardar Metodo de pago')->only('store');
+        $this->middleware('can:Actualizar Metodo de pago')->only('update');
+        $this->middleware('can:Eliminar Metodo de pago')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +36,7 @@ class PaymentMethodController extends Controller
             'company' => Company::find(Auth::user()->companies_id),
         ]);
     }
+
     /**
      * Store a newly created resource in storage.
      *

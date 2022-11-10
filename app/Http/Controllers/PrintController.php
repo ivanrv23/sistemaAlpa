@@ -22,6 +22,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PrintController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Imprimir Venta')->only('ventas');
+        $this->middleware('can:Imprimir Cotizacion')->only('cotizacion');
+        $this->middleware('can:Imprimir Productos')->only('productos');
+    } 
     
     public function ventas(){
         // Obteniendo el id enviado por url
@@ -51,6 +58,7 @@ class PrintController extends Controller
         // return $pdf->download('invoice.pdf');
         return $pdf->stream('Ventas.pdf');
     }
+
     public function cotizacion()
     {
         // Obteniendo el id enviado por url
@@ -78,6 +86,7 @@ class PrintController extends Controller
 
         return $pdf->stream('cotizacion.pdf');
     }
+
     public function productos()
     {
         $company = Company::find(Auth::user()->companies_id);

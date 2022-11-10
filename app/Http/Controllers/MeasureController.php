@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Redirect;
 
 class MeasureController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Medidas')->only('index');
+        $this->middleware('can:Guardar Medida')->only('store');
+        $this->middleware('can:Actualizar Medida')->only('update');
+        $this->middleware('can:Eliminar Medida')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

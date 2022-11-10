@@ -13,6 +13,15 @@ use Inertia\Inertia;
 
 class PrintingMachineController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Impresoras')->only('index');
+        $this->middleware('can:Guardar Impresora')->only('store');
+        $this->middleware('can:Actualizar Impresora')->only('update');
+        $this->middleware('can:Eliminar Impresora')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *

@@ -90,7 +90,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('dashboard/workers', WorkerController::class);
 
     // Rutas de vendedores
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard')->middleware('can:Dashboard');
     Route::resource('dashboard/products', ProductController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/services', ServiceController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/proofPayments', ProofPaymentController::class)->except('create', 'edit', 'show');
@@ -99,6 +99,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/print_ventas', [PrintController::class, 'ventas'])->name('print_ventas');
     Route::get('/print_cotizacion', [PrintController::class, 'cotizacion'])->name('print_cotizacion');
     Route::get('/print_productos', [PrintController::class, 'productos'])->name('print_productos');
+    
     Route::get('/products_export', [ProductController::class, 'exportProducts'])->name('export_productos');
     Route::get('/export_cotizacion', [QuotationController::class, 'exportCotizacion'])->name('export_productos');
 });

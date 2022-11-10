@@ -10,6 +10,10 @@ use Inertia\Inertia;
 
 class BarcodeGeneratorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Generador de codigo de barras')->only('index');
+    }
     /**
      * Display a listing of the resource.
      *

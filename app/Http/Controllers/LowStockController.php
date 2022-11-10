@@ -11,6 +11,14 @@ use Inertia\Inertia;
 
 class LowStockController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Existencias bajas')->only('index');
+        $this->middleware('can:Guardar Existencia baja')->only('store');
+        $this->middleware('can:Actualizar Existencia baja')->only('update');
+        $this->middleware('can:Eliminar Existencia baja')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

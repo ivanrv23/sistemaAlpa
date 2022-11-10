@@ -13,6 +13,14 @@ use Inertia\Inertia;
 
 class WarehouseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Almacenes')->only('index');
+        $this->middleware('can:Guardar Almacen')->only('store');
+        $this->middleware('can:Actualizar Almacen')->only('update');
+        $this->middleware('can:Eliminar Almacen')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,6 +36,7 @@ class WarehouseController extends Controller
             'company' => Company::find(Auth::user()->companies_id),
         ]);
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -39,6 +48,7 @@ class WarehouseController extends Controller
         Warehouse::create($request->all());
         return Redirect::route('warehouses.index')->with('message', 'Almacén Registrado');
     }
+
     /**
      * Update the specified resource in storage.
      *

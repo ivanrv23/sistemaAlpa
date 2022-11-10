@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Auth;
 
 class MarkController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Marcas')->only('index');
+        $this->middleware('can:Guardar Marca')->only('store');
+        $this->middleware('can:Actualizar Marca')->only('update');
+        $this->middleware('can:Eliminar Marca')->only('destroy');
+    }
+
     /**
      * Display a listing of the mark.
      *

@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Categorias')->only('index');
+        $this->middleware('can:Guardar Categoria')->only('store');
+        $this->middleware('can:Actualizar Categoria')->only('update');
+        $this->middleware('can:Eliminar Categoria')->only('destroy');
+    }
+
     /**
      * Display a listing of the category.
      *

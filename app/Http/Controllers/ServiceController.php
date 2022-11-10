@@ -17,6 +17,15 @@ use Inertia\Inertia;
 
 class ServiceController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Servicios')->only('index');
+        $this->middleware('can:Guardar Servicio')->only('store');
+        $this->middleware('can:Actualizar Servicio')->only('update');
+        $this->middleware('can:Eliminar Servicio')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *
@@ -38,6 +47,7 @@ class ServiceController extends Controller
             'colors' => Customizer::where('companies_id', $company_id)->get(),
         ]);
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -71,6 +81,7 @@ class ServiceController extends Controller
             return Redirect::route('services.index')->with('message', 'Servicio agregado');
         }
     }
+    
     /**
      * Update the specified resource in storage.
      *

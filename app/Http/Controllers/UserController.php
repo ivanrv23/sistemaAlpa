@@ -17,6 +17,15 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Usuarios')->only('index');
+        $this->middleware('can:Guardar Usuario')->only('store');
+        $this->middleware('can:Actualizar Usuario')->only('update');
+        $this->middleware('can:Eliminar Usuario')->only('destroy');
+    }
+
     /**
      * Display a listing of the User.
      *

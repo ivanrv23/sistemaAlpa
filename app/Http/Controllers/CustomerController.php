@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Clientes')->only('index');
+        $this->middleware('can:Guardar Cliente')->only('store');
+        $this->middleware('can:Actualizar Cliente')->only('update');
+        $this->middleware('can:Eliminar Cliente')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

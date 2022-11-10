@@ -20,6 +20,14 @@ use Inertia\Inertia;
 
 class AccountPayableController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Cuentas por pagar')->only('index');
+        $this->middleware('can:Guardar Cuenta por pagar')->only('store');
+        $this->middleware('can:Actualizar Cuenta por pagar')->only('update');
+        $this->middleware('can:Eliminar Cuenta por pagar')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -62,16 +70,6 @@ class AccountPayableController extends Controller
             'colors' => Customizer::where('companies_id', $company)->get(),
 
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**

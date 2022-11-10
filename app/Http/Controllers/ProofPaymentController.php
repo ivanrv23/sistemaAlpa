@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProofPaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Comprobantes de pagos')->only('index');
+        $this->middleware('can:Guardar Comprobante de pago')->only('store');
+        $this->middleware('can:Actualizar Comprobante de pago')->only('update');
+        $this->middleware('can:Eliminar Comprobante de pago')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *

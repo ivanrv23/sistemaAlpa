@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Redirect;
 
 class CustomizerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Personalizaciones')->only('index');
+        $this->middleware('can:Guardar Personalizacion')->only('store');
+        $this->middleware('can:Actualizar Personalizacion')->only('update');
+        $this->middleware('can:Eliminar Personalizacion')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

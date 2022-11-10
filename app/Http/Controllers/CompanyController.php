@@ -26,11 +26,7 @@ class CompanyController extends Controller
         $this->middleware('can:Actualizar Empresa')->only('update');
         $this->middleware('can:Eliminar Empresa')->only('destroy');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $company = Auth::user()->companies_id;
@@ -42,12 +38,7 @@ class CompanyController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreCompanyRequest  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(StoreCompanyRequest $request)
     {
         $company = Company::create($request->all());
@@ -108,13 +99,6 @@ class CompanyController extends Controller
         return Redirect::route('companies.index')->with('message', 'Empresa agregada');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateCompanyRequest  $request
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateCompanyRequest $request, $id)
     {
         $company = Company::find($id);
@@ -122,12 +106,6 @@ class CompanyController extends Controller
         return Redirect::route('companies.index')->with('message', 'Empresa actualizada');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $company = Company::find($id);

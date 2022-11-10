@@ -13,6 +13,14 @@ use Spatie\Permission\Models\Role;
 
 class WorkerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Empleados')->only('index');
+        $this->middleware('can:Guardar Empleado')->only('store');
+        $this->middleware('can:Actualizar Empleado')->only('update');
+        $this->middleware('can:Eliminar Empleado')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *
@@ -29,16 +37,6 @@ class WorkerController extends Controller
             'colors' => Customizer::where('companies_id', $company)->get(),
             'company' => Company::find(Auth::user()->companies_id),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -59,28 +57,6 @@ class WorkerController extends Controller
         $user->roles()->sync($request->role);
 
         return Redirect::route('workers.index')->with('message', 'Empleado agregado');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
