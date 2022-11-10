@@ -139,15 +139,15 @@ $medidaTicket = 180;
     <table FRAME="border" RULES="none">
         <tr>
             <td>IGV: </td>
-            <td>{{ $igvs }}</td>
+            <td>{{ number_format($igvs, 2, '.', ' ') }}</td>
         </tr>
         <tr>
             <td>Total Parcial:</td>
-            <td> {{ $total }}</td>
+            <td> {{ number_format($total, 2, '.', ' ') }}</td>
         </tr>
         <tr>
             <td>Total:</td>
-            <td> {{ $total + $igvs }}</td>
+            <td> {{ number_format($total + $igvs, 2, '.', ' ')  }}</td>
         </tr>
     </table>
 
