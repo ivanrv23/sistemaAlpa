@@ -21,7 +21,6 @@ class CreateAccountReceivablesTable extends Migration
             $table->decimal('debt', 11, 2);
             $table->string('description', 250)->nullable();
             $table->boolean('state')->default(0);
-            $table->date('date')->nullable();
             $table->timestamps();
         });
     }
