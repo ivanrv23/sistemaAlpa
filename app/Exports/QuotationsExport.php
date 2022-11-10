@@ -5,6 +5,8 @@ namespace App\Exports;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Customizer;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use Illuminate\Support\Facades\Auth;
@@ -35,21 +37,19 @@ class QuotationsExport implements
     public function collection()
     {
         $id = $_REQUEST['id'];
-        $quotation = Quotation::find($id);
+        $quotation = Order::find($id);
         return
-            QuotationDetail::select(
-                "quotation_details.quantity AS cantidad",
+            OrderDetail::select(
+                "order_details.quantity AS cantidad",
                 "products.name AS producto",
                 "marks.name AS Marca",
-                "quotation_details.price AS precio",
-                "quotation_details.igv AS igv",
-                "quotation_details.subTotal AS subTotal",
+                "order_details.price AS precio",
+                "order_details.igv AS igv",
+                "order_details.subTotal AS subTotal",
             )
-            ->join("companies", "companies.id", "=", "quotation_details.companies_id")
-            ->join("customers", "customers.companies_id", "=", "companies.id")
-            ->join("products", "products.id", "=", "quotation_details.products_id")
+            ->join("products", "products.id", "=", "order_details.products_id")
             ->join("marks", "marks.id", "=", "products.marks_id")
-            ->where("quotation_details.quotations_id", "=", $quotation->id)
+            ->where("order_details.orders_id", "=", $quotation->id)
             ->get();
     }
     /**
@@ -89,10 +89,10 @@ class QuotationsExport implements
                 $company = Auth::user()->companies_id;
                 $company_name = Company::find($company)->name;
                 $id = $_REQUEST['id'];
-                $voucher_number = Quotation::find($id)->voucher_number;
-                $customer_id = Quotation::find($id)->customers_id;
+                $voucher_number = Order::find($id)->voucher_number;
+                $customer_id = Order::find($id)->customers_id;
                 $customer_name = Customer::find($customer_id)->name;
-                $date = Quotation::find($id)->date;
+                $date = Order::find($id)->date;
                 $event->sheet->mergeCells($cells);
                 $event->sheet->getDelegate()->getStyle($cells)->getFont()->setBold(true);
                 $event->sheet->getDelegate()->getStyle($cells)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);

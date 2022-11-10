@@ -286,7 +286,7 @@
                       <v-card :color="colorSubMenu">
                         <v-list-item-group :style="item_style()">
                           
-                          <inertia-link :href="route('quotations.index')" v-if="can('Listar Cotizaciones')">
+                          <!-- <inertia-link :href="route('quotations.index')" v-if="can('Listar Cotizaciones')">
                             <v-list-item link :style="item_style()">
                               <v-list-item-icon>
                                 <v-spacer></v-spacer>
@@ -296,7 +296,7 @@
                                 <h5>LISTA DE COTIZACIONES</h5>
                               </v-list-item-title>
                             </v-list-item>
-                          </inertia-link>
+                          </inertia-link> -->
                           
                           <inertia-link :href="route('quotations.create')" v-if="can('Agregar Cotizacion')">
                             <v-list-item link :style="item_style()">

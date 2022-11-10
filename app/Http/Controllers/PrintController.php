@@ -69,9 +69,9 @@ class PrintController extends Controller
         $igv = 0;
         $total = 0;
         $subTot=0;
-        $quotation = Quotation::find($id); // Buscando cotización
+        $quotation = Order::find($id); // Buscando cotización
         $customers_name=Customer::find($quotation->customers_id)->name;
-        $quotation_details = QuotationDetail::where('quotations_id', $quotation->id)->get()->map(function ($o) {
+        $quotation_details = OrderDetail::where('orders_id', $quotation->id)->get()->map(function ($o) {
             return [
                 'quantity' => $o->quantity,
                 'product' => Product::find($o->products_id)->name,

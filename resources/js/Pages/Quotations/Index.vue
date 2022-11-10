@@ -26,7 +26,7 @@
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar" outlined dense hide-details>
                     </v-text-field>
                     <v-spacer></v-spacer>
-                    <inertia-link :href="route('quotations.create')">
+                    <inertia-link :href="route('orders.create')">
                         <v-btn color="primary" dark class="mb-2">
                             Nueva Cotización
                         </v-btn>

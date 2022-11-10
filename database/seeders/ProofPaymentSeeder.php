@@ -30,5 +30,11 @@ class ProofPaymentSeeder extends Seeder
             'name' => 'Boleta de Venta',
             'serie' => 'BEA1', //adjuntar BEA1-correlativo de 8 digitos
         ]);
+
+        ProofPayment::create([
+            'code' => 'C01',
+            'name' => 'Cotización', //Para cuando no quieren emitir Comprobante electronico
+            'serie' => 'CTV1',
+        ]);
     }
 }
