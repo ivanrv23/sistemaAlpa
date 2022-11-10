@@ -47,10 +47,13 @@ class DashboardController extends Controller
         foreach ($totalV as $key => $p) {
             $totalVentasDiaSoles += $p->total;
         }
-        $totalPs = AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
-            ->select("*")->where("orders.coins_id", "=", 1)->where('orders.proof_payments_id', '!=', 4)->where('account_receivables.date', "=", $DateAndTime)->get();
+        // Calcular pagos soles
+        $totalPs = Order::join("account_receivables", "account_receivables.orders_id", "=", "orders.id")
+            ->join("account_receivable_details", "account_receivable_details.account_receivables_id", "=", "account_receivables.id")
+            ->select("*")->where("orders.coins_id", "=", 1)->where('orders.proof_payments_id', '!=', 4)
+            ->where('account_receivable_details.date', $DateAndTime)->where('orders.companies_id', $company_id)->get();
         foreach ($totalPs as $key => $s) {
-            $totalPagosDiaSoles += $s->payment;
+            $totalPagosDiaSoles += $s->amount;
         }
         // ventas del dia en dólares
         $totalVentasDiaDolares = 0;
@@ -60,10 +63,13 @@ class DashboardController extends Controller
         foreach ($totalVd as $key => $p) {
             $totalVentasDiaDolares += $p->total;
         }
-        $totalPd = AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
-            ->select("*")->where("orders.coins_id", "=", 2)->where('orders.proof_payments_id', '!=', 4)->where('account_receivables.date', "=", $DateAndTime)->get();
+        // calcular pagos dolares
+        $totalPd = Order::join("account_receivables", "account_receivables.orders_id", "=", "orders.id")
+            ->join("account_receivable_details", "account_receivable_details.account_receivables_id", "=", "account_receivables.id")
+            ->select("*")->where("orders.coins_id", "=", 2)->where('orders.proof_payments_id', '!=', 4)
+            ->where('account_receivable_details.date', $DateAndTime)->where('orders.companies_id', $company_id)->get();
         foreach ($totalPd as $key => $s) {
-            $totalPagosDiaDolares += $s->payment;
+            $totalPagosDiaDolares += $s->amount;
         }
         $cajaChSoles = 0;
         $cajaChDolares = 0;

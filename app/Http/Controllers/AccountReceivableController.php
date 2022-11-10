@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccountReceivable;
 use App\Http\Requests\StoreAccountReceivableRequest;
 use App\Http\Requests\UpdateAccountReceivableRequest;
+use App\Models\AccountReceivableDetail;
 use App\Models\CashRegister;
 use App\Models\Coin;
 use App\Models\Company;
@@ -134,11 +135,20 @@ class AccountReceivableController extends Controller
             'debt' => $nvDeuda,
             'description' => $request->description,
             'state' => $nvestado,
-            'date' => date('Y-m-d'),
         ]);
         $orders->update([
             'state' => $nvestado,
         ]);
+
+        // Agregar detalle de pago con fecha
+        $detallePago = new AccountReceivableDetail();
+        $detallePago->companies_id = $company;
+        $detallePago->account_receivables_id = $accountReceivable->id;
+        $detallePago->amount = $nvPago;
+        $detallePago->date = date('Y-m-d');
+        $detallePago->description =  $request->description;
+        $detallePago->save();
+
         // Caja General
         $pettyCash = PettyCash::where('companies_id', $company)->where('state', 1)->get();
         if ($pettyCash == '[]') {
@@ -159,12 +169,12 @@ class AccountReceivableController extends Controller
 
         // Agregar pagos segun caja seleccionada
         $cashRegister = CashRegister::where('companies_id', $company)->where('id', $orders->cash_registers_id)->get();
-        if ($orders->coins_id == 1) {            
+        if ($orders->coins_id == 1) {
             $cashRegister[0]->update([
                 $cashRegister[0]->amount_pen += $request->totalPago,
             ]);
         } else {
-            if ($orders->coins_id == 2) {              
+            if ($orders->coins_id == 2) {
                 $cashRegister[0]->update([
                     $cashRegister[0]->amount_usd += $request->totalPago,
                 ]);

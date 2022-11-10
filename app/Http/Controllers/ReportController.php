@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccountReceivable;
+use App\Models\AccountReceivableDetail;
 use App\Models\CashRegister;
 use App\Models\Coin;
 use App\Models\Company;
@@ -54,9 +55,10 @@ class ReportController extends Controller
         } else {
             $DateAndTimeFin = $dateFin;
         }
-        // VENTAS 
+        // VENTAS TOTALES PEN - USD
         $totalVentasDiaSoles = 0;
         $totalVentasDiaDolares = 0;
+        $totalVentasDolares = 0;
         $total_pen_usd = 0;
 
         $total_pen = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=', 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 1)->get();
@@ -68,35 +70,31 @@ class ReportController extends Controller
 
         foreach ($total_usd as $key => $p) {
             $totalVentasDiaDolares += ($p->total * $p->exchange_rate);
+            $totalVentasDolares += $p->total;
         }
         $total_pen_usd = ($totalVentasDiaSoles + $totalVentasDiaDolares);
 
         // PAGOS
         $totalPagosDiaSoles = 0;
         $totalPagosDiaDolares = 0;
-        $total_pagos_pen_usd = 0;
-
-        $total_pago_pen = AccountReceivable::join("orders", "orders.id", "=", "account_receivables.orders_id")
-            ->select("*")->where('orders.companies_id', $company)
-            ->where('orders.cash_registers_id', $cja)
-            ->where('orders.coins_id', 1)
-            ->where('orders.proof_payments_id', '!=', 4)
-            ->whereBetween('account_receivables.date', [$DateAndTimeInicio, $DateAndTimeFin])->get();
-
+        // Calcular total en soles
+        $total_pago_pen = Order::join("account_receivables", "account_receivables.orders_id", "=", "orders.id")
+            ->join("account_receivable_details", "account_receivable_details.account_receivables_id", "=", "account_receivables.id")
+            ->where("orders.coins_id", "=", 1)->where('cash_registers_id', $cja)->where('orders.companies_id', $company)->select("*")
+            ->whereBetween('account_receivable_details.date', [$DateAndTimeInicio, $DateAndTimeFin])->get();
         foreach ($total_pago_pen as $key => $p) {
-            $totalPagosDiaSoles += $p->payment;
+            $totalPagosDiaSoles += $p->amount;
         }
-        $total_pago_usd = AccountReceivable::join("orders", "orders.id", "=", "account_receivables.orders_id")
-            ->select("*")->where('orders.companies_id', $company)
-            ->where('orders.cash_registers_id', $cja)
-            ->where('orders.coins_id', 2)
-            ->where('orders.proof_payments_id', '!=', 4)
-            ->whereBetween('account_receivables.date', [$DateAndTimeInicio, $DateAndTimeFin])->get();
+        // calcular total en dolares
+        $total_pago_usd = Order::join("account_receivables", "account_receivables.orders_id", "=", "orders.id")
+            ->join("account_receivable_details", "account_receivable_details.account_receivables_id", "=", "account_receivables.id")
+            ->where("orders.coins_id", "=", 2)->where('cash_registers_id', $cja)->where('orders.companies_id', $company)->select("*")
+            ->whereBetween('account_receivable_details.date', [$DateAndTimeInicio, $DateAndTimeFin])->get();
 
         foreach ($total_pago_usd as $key => $p) {
-            $totalPagosDiaDolares += ($p->payment * $p->exchange_rate);
+            $totalPagosDiaDolares += $p->amount;
         }
-        $total_pagos_pen_usd = ($totalPagosDiaSoles + $totalPagosDiaDolares);
+        // FIN PAGOS
 
         // COMPRAS
         $totalComprasDiaSoles = 0;
@@ -125,21 +123,28 @@ class ReportController extends Controller
 
         // Obtener ganancias del dia
         $total_ganancia = 0;
-        $gananciaTotal = Order::join("order_details", "orders.id", "=", "order_details.orders_id")->join("products", "products.id", "=", "order_details.products_id")->where('orders.companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('orders.date', [$DateAndTimeInicio, $DateAndTimeInicio])->select("products.purchase_price", "order_details.quantity")->get();
+        $gananciaTotal = Order::join("order_details", "orders.id", "=", "order_details.orders_id")
+            ->join("products", "products.id", "=", "order_details.products_id")
+            ->where('orders.companies_id', $company)->where('orders.cash_registers_id', $cja)
+            ->whereBetween('orders.date', [$DateAndTimeInicio, $DateAndTimeInicio])
+            ->select("products.purchase_price", "order_details.quantity")->get();
         foreach ($gananciaTotal as $key => $p) {
             $total_ganancia += ($p->purchase_price * $p->quantity);
         }
         return Inertia::render('Reports/Index', [
             // Datos Ventas
+            'soles' => number_format($totalVentasDiaSoles, 2),
+            'dolares' => number_format($totalVentasDolares, 2),
             'totalVentas' => number_format($total_pen_usd, 2),
-            'totalPagos' => number_format($total_pagos_pen_usd, 2),
+            'totalPagosSoles' => number_format($totalPagosDiaSoles, 2),
+            'totalPagosDolares' => number_format($totalPagosDiaDolares, 2),
             'totalPrecioCompra' => number_format($total_pen_usd - $total_ganancia, 2),
             'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)
                 ->where('proof_payments_id', '!=', 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
-            'totPagos' => AccountReceivable::join("orders", "orders.id", "=", "account_receivables.orders_id")
-                ->where('orders.companies_id', $company)
-                ->where('orders.cash_registers_id', $cja)
-                ->whereBetween('account_receivables.date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
+            'totPagos' => Order::join("account_receivables", "account_receivables.orders_id", "=", "orders.id")
+                ->join("account_receivable_details", "account_receivable_details.account_receivables_id", "=", "account_receivables.id")
+                ->where("orders.coins_id", "=", 2)->where('orders.cash_registers_id', $cja)->where('orders.companies_id', $company)->select("*")
+                ->whereBetween('account_receivable_details.date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // N° Compras
             'totalCompras' => number_format($totalC_pen_usd, 2),
             // N° Productos
@@ -188,6 +193,25 @@ class ReportController extends Controller
                     }),
                 ];
             }),
+            // lista de pagos
+            'listaPagos' => Order::join("account_receivables", "account_receivables.orders_id", "=", "orders.id")
+                ->join("account_receivable_details", "account_receivable_details.account_receivables_id", "=", "account_receivables.id")
+                ->where('orders.cash_registers_id', $cja)->where('orders.companies_id', $company)
+                ->whereBetween('account_receivable_details.date', [$DateAndTimeInicio, $DateAndTimeFin])
+                ->select(
+                    "account_receivable_details.date AS fecha",
+                    "orders.customers_id AS idEmpleado",
+                    "account_receivable_details.amount AS monto",
+                    "orders.coins_id AS idMoneda"
+                )->get()->map(function ($p) {
+                    return [
+                        'date' => $p->fecha,
+                        'customers_name' => Customer::find($p->idEmpleado)->name,
+                        'amount' => $p->monto,
+                        'coin' => Coin::find($p->idMoneda)->code,
+                    ];
+                }),
+
             'totPurchases' => Purchase::where('companies_id', $company)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // Lista de Compras
             'purchases' => Purchase::where('companies_id', $company)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->get()->map(function ($p) {
