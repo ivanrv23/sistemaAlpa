@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccountReceivable;
 use App\Models\CashRegister;
 use App\Models\Coin;
 use App\Models\Company;
@@ -31,26 +32,26 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($consultaCaja=null,$dateInicio = null, $dateFin = null)
+    public function index($consultaCaja = null, $dateInicio = null, $dateFin = null)
     {
 
         $company = Auth::user()->companies_id;
         // 
-        if($consultaCaja==null){
-            $cja=1;
-        }else{
-            $cja=$consultaCaja;
+        if ($consultaCaja == null) {
+            $cja = 1;
+        } else {
+            $cja = $consultaCaja;
         }
         // 
-        if($dateInicio == null){
+        if ($dateInicio == null) {
             $DateAndTimeInicio = date('Y-m-d');
-        }else{
+        } else {
             $DateAndTimeInicio = $dateInicio;
         }
         // 
-        if($dateFin == null){
+        if ($dateFin == null) {
             $DateAndTimeFin = date('Y-m-d');
-        }else{
+        } else {
             $DateAndTimeFin = $dateFin;
         }
         // VENTAS 
@@ -58,17 +59,44 @@ class ReportController extends Controller
         $totalVentasDiaDolares = 0;
         $total_pen_usd = 0;
 
-        $total_pen = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4 )->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 1)->get();
+        $total_pen = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=', 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 1)->get();
 
         foreach ($total_pen as $key => $p) {
             $totalVentasDiaSoles += $p->total;
         }
-        $total_usd = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4 )->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 2)->get();
+        $total_usd = Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=', 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 2)->get();
 
         foreach ($total_usd as $key => $p) {
             $totalVentasDiaDolares += ($p->total * $p->exchange_rate);
         }
         $total_pen_usd = ($totalVentasDiaSoles + $totalVentasDiaDolares);
+
+        // PAGOS
+        $totalPagosDiaSoles = 0;
+        $totalPagosDiaDolares = 0;
+        $total_pagos_pen_usd = 0;
+
+        $total_pago_pen = AccountReceivable::join("orders", "orders.id", "=", "account_receivables.orders_id")
+            ->select("*")->where('orders.companies_id', $company)
+            ->where('orders.cash_registers_id', $cja)
+            ->where('orders.coins_id', 1)
+            ->where('orders.proof_payments_id', '!=', 4)
+            ->whereBetween('account_receivables.date', [$DateAndTimeInicio, $DateAndTimeFin])->get();
+
+        foreach ($total_pago_pen as $key => $p) {
+            $totalPagosDiaSoles += $p->payment;
+        }
+        $total_pago_usd = AccountReceivable::join("orders", "orders.id", "=", "account_receivables.orders_id")
+            ->select("*")->where('orders.companies_id', $company)
+            ->where('orders.cash_registers_id', $cja)
+            ->where('orders.coins_id', 2)
+            ->where('orders.proof_payments_id', '!=', 4)
+            ->whereBetween('account_receivables.date', [$DateAndTimeInicio, $DateAndTimeFin])->get();
+
+        foreach ($total_pago_usd as $key => $p) {
+            $totalPagosDiaDolares += ($p->payment * $p->exchange_rate);
+        }
+        $total_pagos_pen_usd = ($totalPagosDiaSoles + $totalPagosDiaDolares);
 
         // COMPRAS
         $totalComprasDiaSoles = 0;
@@ -104,18 +132,24 @@ class ReportController extends Controller
         return Inertia::render('Reports/Index', [
             // Datos Ventas
             'totalVentas' => number_format($total_pen_usd, 2),
+            'totalPagos' => number_format($total_pagos_pen_usd, 2),
             'totalPrecioCompra' => number_format($total_pen_usd - $total_ganancia, 2),
-            'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
+            'totOrders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)
+                ->where('proof_payments_id', '!=', 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
+            'totPagos' => AccountReceivable::join("orders", "orders.id", "=", "account_receivables.orders_id")
+                ->where('orders.companies_id', $company)
+                ->where('orders.cash_registers_id', $cja)
+                ->whereBetween('account_receivables.date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // N° Compras
             'totalCompras' => number_format($totalC_pen_usd, 2),
             // N° Productos
             'totProducts' => Product::where('companies_id', $company)->count(),
             'inversionTotal' => number_format($totInversion, 2),
-            'consultaCaja'=>$cja,
-            'dateInicio'=>$DateAndTimeInicio,
-            'dateFin'=>$DateAndTimeFin,
+            'consultaCaja' => $cja,
+            'dateInicio' => $DateAndTimeInicio,
+            'dateFin' => $DateAndTimeFin,
             // lista Ventas
-            'orders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=' , 4 )->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->get()->map(function ($p) {
+            'orders' => Order::where('companies_id', $company)->where('cash_registers_id', $cja)->where('proof_payments_id', '!=', 4)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
                     'companies_id' => $p->companies_id,

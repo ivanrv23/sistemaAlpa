@@ -41,27 +41,27 @@ class DashboardController extends Controller
         $DateAndTime = date('Y-m-d');
         // ventas del dia en soles
         $totalVentasDiaSoles = 0;
-        $totalPagosDiaSoles=0;
+        $totalPagosDiaSoles = 0;
         $totalV = Order::where('companies_id', $company_id)->where('date', $DateAndTime)
-            ->where('coins_id', 1)->get();       
+            ->where('coins_id', 1)->where('proof_payments_id', '!=', 4)->get();
         foreach ($totalV as $key => $p) {
-                $totalVentasDiaSoles += $p->total;
+            $totalVentasDiaSoles += $p->total;
         }
-        $totalPs=AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
-        ->select("*")->where("orders.coins_id", "=", 1)->where('account_receivables.date', "=", $DateAndTime)->get();
+        $totalPs = AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
+            ->select("*")->where("orders.coins_id", "=", 1)->where('orders.proof_payments_id', '!=', 4)->where('account_receivables.date', "=", $DateAndTime)->get();
         foreach ($totalPs as $key => $s) {
             $totalPagosDiaSoles += $s->payment;
         }
         // ventas del dia en dólares
         $totalVentasDiaDolares = 0;
-        $totalPagosDiaDolares=0;
+        $totalPagosDiaDolares = 0;
         $totalVd = Order::where('companies_id', $company_id)->where('date', $DateAndTime)
-            ->where('coins_id', 2)->get();
+            ->where('coins_id', 2)->where('proof_payments_id', '!=', 4)->get();
         foreach ($totalVd as $key => $p) {
-                $totalVentasDiaDolares += $p->total;
+            $totalVentasDiaDolares += $p->total;
         }
-        $totalPd=AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
-        ->select("*")->where("orders.coins_id", "=", 1)->where('account_receivables.date', "=", $DateAndTime)->get();
+        $totalPd = AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
+            ->select("*")->where("orders.coins_id", "=", 2)->where('orders.proof_payments_id', '!=', 4)->where('account_receivables.date', "=", $DateAndTime)->get();
         foreach ($totalPd as $key => $s) {
             $totalPagosDiaDolares += $s->payment;
         }
@@ -88,7 +88,7 @@ class DashboardController extends Controller
             'colors' => Customizer::where('companies_id', $company_id)->get(),
             'company' => Company::find($company_id),
             'totalVentSol' => number_format($totalVentasDiaSoles + $totalPagosDiaSoles, 2),
-            'totalVentDolar' => number_format($totalVentasDiaDolares+$totalPagosDiaDolares, 2),
+            'totalVentDolar' => number_format($totalVentasDiaDolares + $totalPagosDiaDolares, 2),
             'cajaE' => $existeCaja,
             'cajaChicaSoles' => number_format($cajaChSoles, 2),
             'cajaChicaDolares' => number_format($cajaChDolares, 2),
