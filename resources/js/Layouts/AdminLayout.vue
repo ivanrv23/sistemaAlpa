@@ -54,6 +54,17 @@
                     </v-list-item-content>
                   </v-list-item>
                 </inertia-link>
+
+                <inertia-link :href="route('roles.index')" v-if="can('Listar Roles')">
+                  <v-list-item link :style="item_style()">
+                    <v-list-item-icon>
+                      <v-icon :style="item_style()">mdi-account-lock</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>ROLES</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </inertia-link>
                 
                 <!-- <v-list-group v-if="$page.props.user.role == 'master'"> -->
                   <v-list-group v-if="can('Administracion')">

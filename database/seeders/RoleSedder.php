@@ -15,9 +15,9 @@ class RoleSedder extends Seeder
      */
     public function run()
     {
-        $master = Role::create([ 'name' => 'Master' ]);
-        $admin = Role::create([ 'name' => 'Admin' ]);
-        $seller = Role::create([ 'name' => 'Seller' ]);
+        $master = Role::create([ 'name' => 'Master', 'companies_id' => 1 ]);
+        $admin = Role::create([ 'name' => 'Admin', 'companies_id' => 1  ]);
+        $seller = Role::create([ 'name' => 'Seller', 'companies_id' => 1  ]);
         
         Permission::create(['name' => 'Administracion'])->syncRoles([$master]);
 
@@ -250,6 +250,14 @@ class RoleSedder extends Seeder
         Permission::create(['name' => 'Exportar Productos'])->syncRoles([$master, $admin, $seller]);
 
         Permission::create(['name' => 'Exportar Cotizacion'])->syncRoles([$master, $admin, $seller]);
+
+        Permission::create(['name' => 'Listar Roles'])->syncRoles([$master, $admin]);
+        Permission::create(['name' => 'Agregar Rol'])->syncRoles([$master, $admin]);
+        Permission::create(['name' => 'Editar Rol'])->syncRoles([$master, $admin]);
+        Permission::create(['name' => 'Mostar Rol'])->syncRoles([$master, $admin]);
+        Permission::create(['name' => 'Guardar Rol'])->syncRoles([$master, $admin]);
+        Permission::create(['name' => 'Actualizar Rol'])->syncRoles([$master, $admin]);
+        Permission::create(['name' => 'Eliminar Rol'])->syncRoles([$master, $admin]);
 
 
     }

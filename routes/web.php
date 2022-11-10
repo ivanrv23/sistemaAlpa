@@ -27,6 +27,7 @@ use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PrintingMachineController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\WarehouseController;
@@ -88,6 +89,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Route::get('dashboard/reports/{datInicio?}/{datFin?}', [ReportController::class, 'index'])->name('reports.index');
     Route::get('dashboard/reports/{nroCaja?}/{datInicio?}/{datFin?}', [ReportController::class, 'index'])->name('reports.index');
     Route::resource('dashboard/workers', WorkerController::class);
+
+    Route::resource('dashboard/roles', RoleController::class);
+
 
     // Rutas de vendedores
     Route::get('/dashboard', DashboardController::class)->name('dashboard')->middleware('can:Dashboard');
