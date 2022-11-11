@@ -13,6 +13,9 @@ import { InertiaProgress } from '@inertiajs/progress'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
+import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
+
+
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaPlugin);
 Vue.use(PortalVue);
@@ -21,6 +24,7 @@ InertiaProgress.init()
 
 //also add this line
 Vue.use(Vuetify);
+Vue.use(LaravelPermissionToVueJS);
 
 const app = document.getElementById('app');
 

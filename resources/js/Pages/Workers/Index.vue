@@ -20,11 +20,11 @@
         </div>
         <!-- Fin de Alertas -->
         
-        <v-data-table :headers="headers" :items="desserts" sort-by="calories" 
+        <v-data-table :headers="headers" :items="desserts" sort-by="name" 
         class="elevation-24" :search="search">
             <template v-slot:top>
                 <v-toolbar flat >
-                    <v-toolbar-title>Lista de Usuarios</v-toolbar-title>
+                    <v-toolbar-title>Lista de Empleados</v-toolbar-title>
 
                     <v-divider class="mx-4" inset vertical ></v-divider>
 
@@ -34,7 +34,7 @@
                     
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" >
-                                Agregar Usuario
+                                Agregar Empleado
                             </v-btn>
 
                             <v-spacer></v-spacer>
@@ -95,6 +95,7 @@
                                                 counter
                                                 @click:append="show1 = !show1"
                                                 dense outlined 
+                                                :rules="[(v) => !!v || 'La contraseña es requerida']"
                                                 ></v-text-field>
                                             </v-col>
                                             <!-- Se mostrara cuando se valla a crear -->
@@ -198,6 +199,7 @@
         },
         data () {
             return {
+
                 // Para clave
                 show1: false,
 
@@ -206,7 +208,6 @@
                 dialogDelete: false,
                 headers: [
                     { text: 'NOMBRE', value: 'name' },
-                    { text: 'EMPRESA', value: 'company_name' },
                     { text: 'CORREO', value: 'email' },
                     { text: 'ACCIONES', value: 'actions', sortable: false },
                 ],
@@ -223,7 +224,6 @@
                     created_at: '',
                     updated_at: '',
                     change_password: '',
-                    company_name: '',
                     
                 },
 
@@ -236,9 +236,6 @@
                     created_at: '',
                     updated_at: '',
                     change_password: '',
-                    company_name: '',
-                    
-
                 },
 
             }
@@ -246,7 +243,7 @@
 
         computed: {
             formTitle () {
-                return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
+                return this.editedIndex === -1 ? 'Nuevo Empleado' : 'Editar Empleado'
             },
         },
 
@@ -306,7 +303,7 @@
                 
                 // ***************************************
                 // enviando formulario para eliminar
-                this.$inertia.delete(this.route('users.destroy', this.editedItem))
+                this.$inertia.delete(this.route('workers.destroy', this.editedItem))
                 // ***************************************
             },
 
@@ -327,7 +324,6 @@
             },
 
             save () {
-                this.editedItem.role = this.rol_selected
                 if (this.editedIndex > -1) {
 
                     // esto agregaba el item a la tabla con solo javascrip 
@@ -338,7 +334,7 @@
                     // Update
                     // ***************************************
                     // enviado formulario de almacenar 
-                    this.$inertia.patch(route('users.update', this.editedItem ), this.editedItem)
+                    this.$inertia.patch(route('workers.update', this.editedItem ), this.editedItem)
                     // ***************************************
 
                 } else {
@@ -346,7 +342,7 @@
                     // Store
                     // ***************************************
                     // enviado formulario de almacenar 
-                    this.$inertia.post(route('users.store'), this.editedItem)
+                    this.$inertia.post(route('workers.store'), this.editedItem)
 
                     // this.desserts.push(this.editedItem)
 

@@ -265,7 +265,7 @@
                             </v-card>
                         </v-list-group>
 
-                        <v-list-group :style="item_style()">
+                        <v-list-group :style="item_style()" v-if="$page.props.user.role != 'seller'">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-file-document-edit</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -560,94 +560,97 @@
 
                     </v-list-item-group>
                 </v-list>
-            </v-navigation-drawer>
-            <!-- CONTENIDO MENU VERTICAL END-->
-
-
-            <!-- Menú horizontal -->
-            <v-app-bar app :color="colorHeader" dense elevation="24">
+              </v-navigation-drawer>
+              <!-- CONTENIDO MENU VERTICAL END-->
+              
+              
+              <!-- Menú horizontal -->
+              <v-app-bar app :color="colorHeader" dense elevation="24">
                 <v-app-bar-nav-icon @click="drawer = !drawer" :style="item_style()"></v-app-bar-nav-icon>
-
+                
                 <v-toolbar-title>
-                    <!-- INICIO -->
+                  <!-- INICIO -->
                 </v-toolbar-title>
-
+                
                 <v-spacer></v-spacer>
                 <v-list-item right>
-                    <v-spacer></v-spacer>
-                    <inertia-link :href="route('lowStocks.index')">
-                        <v-icon medium dark>mdi-bell</v-icon>
-                        <v-badge offset-y="-9" offset-x="-5" dot left overlap color="red" content="1"
-                            v-if="this.$page.props.flash.nrodts>0" v-show="true">
-                        </v-badge>
-                    </inertia-link>
-                </v-list-item>
-                <v-card>
+                  <v-spacer></v-spacer>
 
-                </v-card>
+                  <inertia-link :href="route('settings.index')" :style="item_style()" class="mr-3 mt-1">
+                    {{ $page.props.user.name }}
+                  </inertia-link>
 
-                <v-menu left bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on" :style="item_style()">
-                            <v-icon :style="item_style()">mdi-dots-vertical</v-icon>
-                        </v-btn>
-                    </template>
-                    <v-list>
-                        <v-list-item @click="() => { }">
-                            <v-list-item-title>Perfil</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item @click="logout">
-                            <v-list-item-title>Cerrar Session</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-
+                  <inertia-link :href="route('lowStocks.index')">
+                    <v-icon medium dark>mdi-bell</v-icon>
+                    <v-badge offset-y="-9" offset-x="-5" dot left overlap color="red" content="1"
+                    v-if="this.$page.props.flash.nrodts>0" v-show="true">
+                  </v-badge>
+                </inertia-link>
+              </v-list-item>
+              
+              <v-menu left bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on" :style="item_style()">
+                    <v-icon :style="item_style()">mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item @click="() => { }">
+                    <v-list-item-title>Perfil</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="logout">
+                    <v-list-item-title>Cerrar Session</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              
             </v-app-bar>
-        </template>
-
-        <v-main>
+          </template>
+          
+          <v-main>
             <v-container>
-                <slot></slot>
+              <slot></slot>
             </v-container>
-            <!-- <pre>{{ $page }}</pre> -->
-        </v-main>
-
-        <!-- PIE DE PAGINA -->
-        <!-- <v-footer padless v-bind="color=" height="60px"> -->
-        <v-footer padless height="60px" :color="colorFooter" app>
-            <v-col class="text-center" cols="12" absolute :style="item_style()">
+            <pre>{{ $page }}</pre>
+          </v-main>
+          
+          <!-- PIE DE PAGINA -->
+          <!-- <v-footer padless v-bind="color=" height="60px"> -->
+            <v-footer padless height="60px" :color="colorFooter" app>
+              <v-col class="text-center" cols="12" absolute :style="item_style()">
                 {{ new Date().getFullYear() }} — <strong>{{this.$page.props.company.name}}</strong>
-            </v-col>
-        </v-footer>
-        <!-- PIE DE PAGINA END -->
-
-    </v-app>
-</template>
-
-<script>
-export default {
-    data() {
-        return {
-            drawer: null,
-            hidden: false,
-            logoEmpresa: this.$page.props.colors[0].logo,
-            colorMenu: this.$page.props.colors[0].color_menu,
-            colorSubMenu: this.$page.props.colors[0].color_sub_menu,
-            colorHeader: this.$page.props.colors[0].color_header,
-            colorFooter: this.$page.props.colors[0].color_footer,
-            colorText: this.$page.props.colors[0].color_text,
-        };
-    },
-    methods: {
-
-        logout() {
-            this.$inertia.post(route('logout'));
-        },
-        item_style() {
+              </v-col>
+            </v-footer>
+            <!-- PIE DE PAGINA END -->
+            
+          </v-app>
+        </template>
+        
+        <script>
+        export default {
+          data() {
             return {
+              drawer: null,
+              hidden: false,
+              logoEmpresa: this.$page.props.colors[0].logo,
+              colorMenu: this.$page.props.colors[0].color_menu,
+              colorSubMenu: this.$page.props.colors[0].color_sub_menu,
+              colorHeader: this.$page.props.colors[0].color_header,
+              colorFooter: this.$page.props.colors[0].color_footer,
+              colorText: this.$page.props.colors[0].color_text,
+            };
+          },
+          methods: {
+            
+            logout() {
+              this.$inertia.post(route('logout'));
+            },
+            item_style() {
+              return {
                 color: this.colorText,
+              }
             }
-        }
-    }
-};
-</script>
+          }
+        };
+      </script>
+      

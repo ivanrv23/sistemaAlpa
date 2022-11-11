@@ -28,6 +28,15 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class QuotationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Cotizaciones')->only('index');
+        $this->middleware('can:Agregar Cotizacion')->only('create');
+        $this->middleware('can:Guardar Cotizacion')->only('store');
+        $this->middleware('can:Eliminar Cotizacion')->only('destroy');
+        $this->middleware('can:Exportar Cotizacion')->only('exportCotizacion');
+    } 
+
     /**
      * Display a listing of the resource.
      *

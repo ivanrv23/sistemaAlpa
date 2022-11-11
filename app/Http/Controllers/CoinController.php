@@ -13,6 +13,15 @@ use Inertia\Inertia;
 
 class CoinController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Monedas')->only('index');
+        $this->middleware('can:Guardar Moneda')->only('store');
+        $this->middleware('can:Actualizar Moneda')->only('update');
+        $this->middleware('can:Eliminar Moneda')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

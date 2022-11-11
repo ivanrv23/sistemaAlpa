@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Redirect;
 
 class PresentationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Presentaciones')->only('index');
+        $this->middleware('can:Guardar Presentacion')->only('store');
+        $this->middleware('can:Actualizar Presentacion')->only('update');
+        $this->middleware('can:Eliminar Presentacion')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

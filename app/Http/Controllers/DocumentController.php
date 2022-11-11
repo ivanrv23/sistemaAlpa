@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Redirect;
 
 class DocumentController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:Listar Documentos')->only('index');
+        $this->middleware('can:Guardar Documento')->only('store');
+        $this->middleware('can:Actualizar Documento')->only('update');
+        $this->middleware('can:Eliminar Documento')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

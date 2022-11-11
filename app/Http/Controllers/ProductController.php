@@ -21,6 +21,15 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Productos')->only('index');
+        $this->middleware('can:Guardar Producto')->only('store');
+        $this->middleware('can:Actualizar Producto')->only('update');
+        $this->middleware('can:Eliminar Producto')->only('destroy');
+        $this->middleware('can:Exportar Productos')->only('exportProducts');
+    } 
+
     /**
      * Display a listing of the resource.
      *
@@ -149,6 +158,7 @@ class ProductController extends Controller
             return Redirect::route('products.index')->with('message', 'Producto eliminado');
         }
     }
+
     public function exportProducts() 
     {
         $company_id = Auth::user()->companies_id;

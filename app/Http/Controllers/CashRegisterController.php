@@ -13,6 +13,14 @@ use Inertia\Inertia;
 
 class CashRegisterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Caja registradora')->only('index');
+        $this->middleware('can:Guardar Caja registradora')->only('store');
+        $this->middleware('can:Actualizar Caja registradora')->only('update');
+        $this->middleware('can:Eliminar Caja registradora')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *

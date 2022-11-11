@@ -23,6 +23,12 @@ use Inertia\Inertia;
 
 class AccountReceivableController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Cuentas por cobrar')->only('index');
+        $this->middleware('can:Actualizar Cuenta por cobrar')->only('update');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -69,15 +75,7 @@ class AccountReceivableController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.

@@ -11,6 +11,12 @@ use Inertia\Inertia;
 
 class SettingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Ajustes')->only('index');
+        $this->middleware('can:Actualizar Ajustes')->only('update');
+    }
+
     /**
      * Display a listing of the resource.
      *

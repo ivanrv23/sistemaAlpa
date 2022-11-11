@@ -33,6 +33,14 @@ use Mike42\Escpos\Printer;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Ventas')->only('index');
+        $this->middleware('can:Guardar Venta')->only('store');
+        $this->middleware('can:Actualizar Venta')->only('update');
+        $this->middleware('can:Eliminar Venta')->only('destroy');
+    } 
+
     /**
      * Display a listing of the resource.
      *

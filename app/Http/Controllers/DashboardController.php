@@ -18,6 +18,7 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
+
     /**
      * Handle the incoming request.
      *

@@ -2,34 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Models\Company;
-use Inertia\Inertia;
-use App\Models\User;
 use App\Models\Customizer;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
+class WorkerController extends Controller
 {
-
     public function __construct()
     {
-        $this->middleware('can:Listar Usuarios')->only('index');
-        $this->middleware('can:Guardar Usuario')->only('store');
-        $this->middleware('can:Actualizar Usuario')->only('update');
-        $this->middleware('can:Eliminar Usuario')->only('destroy');
-    }
+        $this->middleware('can:Listar Empleados')->only('index');
+        $this->middleware('can:Guardar Empleado')->only('store');
+        $this->middleware('can:Actualizar Empleado')->only('update');
+        $this->middleware('can:Eliminar Empleado')->only('destroy');
+    } 
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $company = Auth::user()->companies_id;
-        $roles = Role::all();
-
-        return Inertia::render('Users/Index', [
-            'users' => User::all()->map(function ($user)
+        // return User::where('companies_id', $company)->get();
+        return Inertia::render('Workers/Index', [
+            'users' => User::where('companies_id', $company)->get()->map(function ($user)
             {
                 $roles = $user->getRoleNames();
                 $array_de_roles = [];
@@ -39,7 +41,6 @@ class UserController extends Controller
                 return [
                     "id" => $user->id,
                     "companies_id" => $user->companies_id,
-                    "company_name" => Company::find($user->companies_id)->name,
                     "name" => $user->name,
                     "email" => $user->email,
                     "email_verified_at" => $user->email_verified_at,
@@ -52,14 +53,20 @@ class UserController extends Controller
                     "roles" => $array_de_roles[0],
                 ];
             }),
-            'roles' => $roles,
+            'roles' => Role::where('id', '>', 1)->get(),
             'companies' => Company::all(),
             'colors' => Customizer::where('companies_id', $company)->get(),
             'company' => Company::find(Auth::user()->companies_id),
         ]);
     }
 
-    public function store(StoreUserRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $user = User::create([
             'companies_id' => $request->companies_id,
@@ -70,10 +77,17 @@ class UserController extends Controller
 
         $user->roles()->sync($request->roles);
 
-        return Redirect::route('users.index')->with('message', 'Usuario agregado');
+        return Redirect::route('workers.index')->with('message', 'Empleado agregado');    
     }
 
-    public function update(UpdateUserRequest $request, $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
         $user = User::find($id);
         
@@ -81,14 +95,14 @@ class UserController extends Controller
         $user->roles()->sync($request->roles);
 
 
-        if ($request->change_password) { //En caso de que quiera cambiar la clave
+        if ($request->change_password) {
             $user->update([
                 'companies_id' => $request->companies_id,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->change_password),
             ]);
-        } else { //en caso de que no queira actualizar la clave
+        } else {
             $user->update([
                 'companies_id' => $request->companies_id,
                 'name' => $request->name,
@@ -96,14 +110,20 @@ class UserController extends Controller
             ]);
         }
         
-        return Redirect::route('users.index')->with('message', 'Usuario actualizado');
+        return Redirect::route('workers.index')->with('message', 'Empleado actualizado');
+        
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
         $user = User::find($id);
         $user->delete();
-        return Redirect::route('users.index')->with('message', 'Usuario eliminado');
-    }    
+        return Redirect::route('workers.index')->with('message', 'Empleado eliminado');
+    }
 }
-

@@ -27,12 +27,14 @@ use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PrintingMachineController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\WarehouseController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WorkerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +60,8 @@ Route::get('/', function () {
 });
 
 // Rutas de administrador de la pagina
-Route::middleware(['auth:sanctum', 'verified', 'CheckMaster'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+
     Route::resource('dashboard/companies', CompanyController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/measures', MeasureController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/users', UserController::class)->except('create', 'edit', 'show');
@@ -66,32 +69,32 @@ Route::middleware(['auth:sanctum', 'verified', 'CheckMaster'])->group(function (
     Route::resource('dashboard/paymentMethods', PaymentMethodController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/customizers', CustomizerController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/documents', DocumentController::class)->except('create', 'edit', 'show');
-});
 
 // Rutas de administrador de empresa
-Route::middleware(['auth:sanctum', 'verified', 'CheckAdmin'])->group(function () {
     Route::resource('dashboard/categories', CategoryController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/marks', MarkController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/providers', ProviderController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/customers', CustomerController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/presentations', PresentationController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/purchases', PurchaseController::class)->except('show');
-    Route::resource('dashboard/settings', SettingController::class)->except('edit');
+    Route::resource('dashboard/settings', SettingController::class)->only('index', 'update');
     Route::resource('dashboard/warehouses', WarehouseController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/accountReceivables', AccountReceivableController::class)->except('show');
     Route::resource('dashboard/accountPayables', AccountPayableController::class)->except('show');
-    Route::resource('dashboard/barcodeGenerator', BarcodeGeneratorController::class)->except('show');
+    Route::resource('dashboard/barcodeGenerator', BarcodeGeneratorController::class)->only('index');
     Route::resource('dashboard/lowStocks', LowStockController::class)->except('show');
     Route::resource('dashboard/printingMachines', PrintingMachineController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/pettyCashes', PettyCashController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/cashRegisters', CashRegisterController::class)->except('create', 'edit', 'show');
     // Route::get('dashboard/reports/{datInicio?}/{datFin?}', [ReportController::class, 'index'])->name('reports.index');
     Route::get('dashboard/reports/{nroCaja?}/{datInicio?}/{datFin?}', [ReportController::class, 'index'])->name('reports.index');
-});
+    Route::resource('dashboard/workers', WorkerController::class);
 
-// Rutas de vendedores
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::resource('dashboard/roles', RoleController::class);
+
+
+    // Rutas de vendedores
+    Route::get('/dashboard', DashboardController::class)->name('dashboard')->middleware('can:Dashboard');
     Route::resource('dashboard/products', ProductController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/services', ServiceController::class)->except('create', 'edit', 'show');
     Route::resource('dashboard/proofPayments', ProofPaymentController::class)->except('create', 'edit', 'show');
@@ -100,6 +103,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/print_ventas', [PrintController::class, 'ventas'])->name('print_ventas');
     Route::get('/print_cotizacion', [PrintController::class, 'cotizacion'])->name('print_cotizacion');
     Route::get('/print_productos', [PrintController::class, 'productos'])->name('print_productos');
+    
     Route::get('/products_export', [ProductController::class, 'exportProducts'])->name('export_productos');
     Route::get('/export_cotizacion', [QuotationController::class, 'exportCotizacion'])->name('export_productos');
+
+
+
+    
 });
