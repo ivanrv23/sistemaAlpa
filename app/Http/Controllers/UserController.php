@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\UsersExport;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Company;
@@ -10,9 +9,7 @@ use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Customizer;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -26,11 +23,6 @@ class UserController extends Controller
         $this->middleware('can:Eliminar Usuario')->only('destroy');
     }
 
-    /**
-     * Display a listing of the User.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $company = Auth::user()->companies_id;
@@ -57,7 +49,7 @@ class UserController extends Controller
                     "created_at" => $user->created_at,
                     "updated_at" => $user->updated_at,
                     "profile_photo_url" => $user->profile_photo_url,
-                    "roles" => $array_de_roles[0]   ,
+                    "roles" => $array_de_roles[0],
                 ];
             }),
             'roles' => $roles,
@@ -67,12 +59,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created User in storage.
-     *
-     * @param  \App\Http\Requests\StoreUserRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreUserRequest $request)
     {
         $user = User::create([
@@ -87,12 +73,6 @@ class UserController extends Controller
         return Redirect::route('users.index')->with('message', 'Usuario agregado');
     }
 
-    /**
-     * Update the specified User in storage.
-     *
-     * @param  \App\Http\Requests\UpdateUserRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateUserRequest $request, $id)
     {
         $user = User::find($id);
@@ -100,14 +80,15 @@ class UserController extends Controller
         // Asignar roles
         $user->roles()->sync($request->roles);
 
-        if ($request->change_password) {
+
+        if ($request->change_password) { //En caso de que quiera cambiar la clave
             $user->update([
                 'companies_id' => $request->companies_id,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->change_password),
             ]);
-        } else {
+        } else { //en caso de que no queira actualizar la clave
             $user->update([
                 'companies_id' => $request->companies_id,
                 'name' => $request->name,
@@ -118,12 +99,6 @@ class UserController extends Controller
         return Redirect::route('users.index')->with('message', 'Usuario actualizado');
     }
 
-    /**
-     * Remove the specified User from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $user = User::find($id);
