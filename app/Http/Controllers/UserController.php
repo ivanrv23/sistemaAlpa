@@ -37,7 +37,28 @@ class UserController extends Controller
         $roles = Role::all();
         // $role_selected = DB::select('select * from model_has_roles where roles_id = ?', [1]);
         return Inertia::render('Users/Index', [
-            'users' => User::all(),
+            'users' => User::all()->map(function ($user)
+            {
+                $roles = $user->getRoleNames();
+                $array_de_roles = [];
+                foreach ($roles as $rol) {
+                    array_push($array_de_roles, Role::where('name', $rol)->get() );
+                }
+                return [
+                    "id" => $user->id,
+                    "companies_id" => $user->companies_id,
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "email_verified_at" => $user->email_verified_at,
+                    "two_factor_confirmed_at" => $user->two_factor_confirmed_at,
+                    "current_team_id" => $user->current_team_id,
+                    "profile_photo_path" => $user->profile_photo_path,
+                    "created_at" => $user->created_at,
+                    "updated_at" => $user->updated_at,
+                    "profile_photo_url" => $user->profile_photo_url,
+                    "roles" => $array_de_roles[0]   ,
+                ];
+            }),
             'roles' => $roles,
             'companies' => Company::all(),
             'colors' => Customizer::where('companies_id', $company)->get(),
@@ -53,13 +74,15 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        User::create([
+        $user = User::create([
             'companies_id' => $request->companies_id,
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => bcrypt($request->password),
         ]);
+
+        $user->roles()->sync($request->roles);
+
         return Redirect::route('users.index')->with('message', 'Usuario agregado');
     }
 
@@ -74,14 +97,13 @@ class UserController extends Controller
         $user = User::find($id);
         
         // Asignar roles
-        $user->roles()->sync($request->role);
+        $user->roles()->sync($request->roles);
 
         if ($request->change_password) {
             $user->update([
                 'companies_id' => $request->companies_id,
                 'name' => $request->name,
                 'email' => $request->email,
-                // 'role' => $request->role,
                 'password' => bcrypt($request->change_password),
             ]);
         } else {
@@ -89,7 +111,6 @@ class UserController extends Controller
                 'companies_id' => $request->companies_id,
                 'name' => $request->name,
                 'email' => $request->email,
-                // 'role' => $request->role,
             ]);
         }
         
