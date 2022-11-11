@@ -9,18 +9,18 @@
                 <!-- cambio colores -->
                 <!-- v-bind:class="{ red: colorrojo}" -->
                 <v-list class="ma-2">
-                    <v-img aspect-ratio="2.5" contain :src='"../../"+logoEmpresa'>
+                    <v-img aspect-ratio="2.5" contain :src='"../../" + logoEmpresa'>
                     </v-img>
                     <!-- <v-list-item class="px-2">
-                        <v-avatar size="70">
-                            <v-img src="../img/empresa1/empresa01.png">
-                            </v-img>
-                        </v-avatar>
-                        <v-list-item-title class="text-h6" color="#FFFFFFFF">
-                            <span :style="item_style()"></span>
-                        </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item> -->
+                <v-avatar size="70">
+                  <v-img src="../img/empresa1/empresa01.png">
+                  </v-img>
+                </v-avatar>
+                <v-list-item-title class="text-h6" color="#FFFFFFFF">
+                  <span :style="item_style()"></span>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item> -->
                     <v-list-item-content>
                         <v-list-item-subtitle style="text-align:center ;">
                             <span :style="item_style()">{{ this.$page.props.company.description }}</span>
@@ -29,10 +29,10 @@
 
                     <!-- Personalizar colores -->
                     <!-- <v-fab-transition>
-                            <v-btn v-show="!hidden" color="pink" fab dark small absolute bottom right>
-                                <v-icon :style="item_style()">mdi-spin mdi-cog</v-icon>
-                            </v-btn>
-                        </v-fab-transition> -->
+                  <v-btn v-show="!hidden" color="pink" fab dark small absolute bottom right>
+                    <v-icon :style="item_style()">mdi-spin mdi-cog</v-icon>
+                  </v-btn>
+                </v-fab-transition> -->
 
                     <!-- </v-list-item> -->
                 </v-list>
@@ -43,7 +43,8 @@
                 <v-list nav dense>
                     <v-list-item-group color="primary">
 
-                        <inertia-link :href="route('dashboard')">
+
+                        <inertia-link :href="route('dashboard')" v-if="can('Dashboard')">
                             <v-list-item link :style="item_style()">
                                 <v-list-item-icon>
                                     <v-icon :style="item_style()">mdi-monitor-multiple</v-icon>
@@ -54,7 +55,19 @@
                             </v-list-item>
                         </inertia-link>
 
-                        <v-list-group v-if="$page.props.user.role == 'master'">
+                        <inertia-link :href="route('roles.index')" v-if="can('Listar Roles')">
+                            <v-list-item link :style="item_style()">
+                                <v-list-item-icon>
+                                    <v-icon :style="item_style()">mdi-account-lock</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>ROLES</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </inertia-link>
+
+                        <!-- <v-list-group v-if="$page.props.user.role == 'master'"> -->
+                        <v-list-group v-if="can('Administracion')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-account-tie</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -64,7 +77,7 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group>
 
-                                    <inertia-link :href="route('companies.index')">
+                                    <inertia-link :href="route('companies.index')" v-if="can('Listar Empresas')">
                                         <v-list-item :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -76,7 +89,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('customizers.index')">
+                                    <inertia-link :href="route('customizers.index')"
+                                        v-if="can('Listar Personalizaciones')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -88,7 +102,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('users.index')">
+                                    <inertia-link :href="route('users.index')" v-if="can('Listar Usuarios')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -100,7 +114,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('measures.index')">
+                                    <inertia-link :href="route('measures.index')" v-if="can('Listar Medidas')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -112,7 +126,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('proofPayments.index')">
+                                    <inertia-link :href="route('proofPayments.index')"
+                                        v-if="can('Listar Comprobantes de pagos')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -124,7 +139,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('coins.index')">
+                                    <inertia-link :href="route('coins.index')" v-if="can('Listar Monedas')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -136,7 +151,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('paymentMethods.index')">
+                                    <inertia-link :href="route('paymentMethods.index')"
+                                        v-if="can('Listar Metodos de pago')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -147,7 +163,8 @@
                                             </v-list-item-title>
                                         </v-list-item>
                                     </inertia-link>
-                                    <inertia-link :href="route('documents.index')">
+
+                                    <inertia-link :href="route('documents.index')" v-if="can('Listar Documentos')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -163,17 +180,20 @@
                             </v-card>
                         </v-list-group>
 
+                        <!-- Ventas -->
                         <v-list-group :style="item_style()">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-cart</v-icon>
+
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
                                     <v-list-item-title>VENTAS</v-list-item-title>
                                 </v-list-item-content>
                             </template>
+
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <inertia-link :href="route('orders.create')">
+                                    <inertia-link :href="route('orders.create')" v-if="can('Agregar Venta')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -185,7 +205,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('orders.index')">
+                                    <inertia-link :href="route('orders.index')" v-if="can('Listar Ventas')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -197,9 +217,9 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('accountReceivables.index')">
-                                        <v-list-item v-if="$page.props.user.role != 'seller'" link
-                                            :style="item_style()">
+                                    <inertia-link :href="route('accountReceivables.index')"
+                                        v-if="can('Listar Cuentas por cobrar')">
+                                        <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
                                                 <v-icon :style="item_style()" small>mdi-account-cash</v-icon>
@@ -213,8 +233,11 @@
                                 </v-list-item-group>
                             </v-card>
                         </v-list-group>
+                        <!-- Fin de Ventas -->
 
-                        <v-list-group :style="item_style()" v-if="$page.props.user.role != 'seller'">
+                        <!-- Compras -->
+                        <!-- <v-list-group :style="item_style()" v-if="$page.props.user.role != 'seller'"> -->
+                        <v-list-group :style="item_style()" v-if="can('Listar Compras')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-cash-multiple</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -224,7 +247,7 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <inertia-link :href="route('purchases.create')">
+                                    <inertia-link :href="route('purchases.create')" v-if="can('Agregar Compra')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -236,7 +259,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('purchases.index')">
+                                    <inertia-link :href="route('purchases.index')" v-if="can('Listar Compras')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -248,9 +271,10 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('accountPayables.index')">
-                                        <v-list-item v-if="$page.props.user.role != 'seller'" link
-                                            :style="item_style()">
+                                    <inertia-link :href="route('accountPayables.index')"
+                                        v-if="can('Listar Cuentas por pagar')">
+                                        <!-- <v-list-item v-if="$page.props.user.role != 'seller'" link -->
+                                        <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
                                                 <v-icon :style="item_style()" small>mdi-account-cash</v-icon>
@@ -264,8 +288,10 @@
                                 </v-list-item-group>
                             </v-card>
                         </v-list-group>
+                        <!-- Compras -->
 
-                        <v-list-group :style="item_style()" v-if="$page.props.user.role != 'seller'">
+                        <!-- Cotizaciones -->
+                        <v-list-group :style="item_style()" v-if="can('Listar Cotizaciones')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-file-document-edit</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -275,7 +301,19 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <!-- <inertia-link :href="route('quotations.create')">
+                                    <!-- <inertia-link :href="route('quotations.index')" v-if="can('Listar Cotizaciones')">
+                              <v-list-item link :style="item_style()">
+                                <v-list-item-icon>
+                                  <v-spacer></v-spacer>
+                                  <v-icon :style="item_style()" small>mdi-clipboard-text</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>
+                                  <h5>LISTA DE COTIZACIONES</h5>
+                                </v-list-item-title>
+                              </v-list-item>
+                            </inertia-link> -->
+
+                                    <inertia-link :href="route('quotations.create')" v-if="can('Agregar Cotizacion')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -285,26 +323,17 @@
                                                 <h5>NUEVA COTIZACIÓN</h5>
                                             </v-list-item-title>
                                         </v-list-item>
-                                    </inertia-link> -->
-
-                                    <inertia-link :href="route('quotations.index')">
-                                        <v-list-item link :style="item_style()">
-                                            <v-list-item-icon>
-                                                <v-spacer></v-spacer>
-                                                <v-icon :style="item_style()" small>mdi-clipboard-text</v-icon>
-                                            </v-list-item-icon>
-                                            <v-list-item-title>
-                                                <h5>LISTA DE COTIZACIONES</h5>
-                                            </v-list-item-title>
-                                        </v-list-item>
                                     </inertia-link>
 
                                 </v-list-item-group>
                             </v-card>
                         </v-list-group>
+                        <!-- Fin de Cotizaciones -->
 
+                        <!-- Productos -->
                         <v-list-group :style="item_style()">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-spin mdi-cube</v-icon>
+
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
                                     <v-list-item-title>PRODUCTOS</v-list-item-title>
@@ -314,7 +343,7 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <inertia-link :href="route('products.index')">
+                                    <inertia-link :href="route('products.index')" v-if="can('Listar Productos')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -328,8 +357,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('categories.index')"
-                                        v-if="$page.props.user.role != 'seller'">
+                                    <inertia-link :href="route('categories.index')" v-if="can('Listar Categorias')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -341,7 +369,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('marks.index')" v-if="$page.props.user.role != 'seller'">
+                                    <inertia-link :href="route('marks.index')" v-if="can('Listar Marcas')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -354,7 +382,7 @@
                                     </inertia-link>
 
                                     <inertia-link :href="route('presentations.index')"
-                                        v-if="$page.props.user.role != 'seller'">
+                                        v-if="can('Listar Presentaciones')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -369,9 +397,12 @@
                             </v-card>
 
                         </v-list-group>
+                        <!-- Fin de Productos -->
 
-                        <v-list-group :style="item_style()">
+                        <!-- Servicios -->
+                        <v-list-group :style="item_style()" v-if="can('Listar Servicios')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-spin mdi-alpha-s-circle</v-icon>
+
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
                                     <v-list-item-title>SERVICIOS</v-list-item-title>
@@ -381,7 +412,7 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <inertia-link :href="route('services.index')">
+                                    <inertia-link :href="route('services.index')" v-if="can('Listar Servicios')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -393,12 +424,16 @@
                                                 </h5>
                                             </v-list-item-title>
                                         </v-list-item>
+
                                     </inertia-link>
                                 </v-list-item-group>
                             </v-card>
 
                         </v-list-group>
-                        <v-list-group :style="item_style()" v-if="$page.props.user.role != 'seller'">
+                        <!-- Fin de Servicios -->
+
+
+                        <v-list-group :style="item_style()" v-if="can('Listar Caja registradora')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-cash-register</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -409,7 +444,8 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <inertia-link :href="route('cashRegisters.index')">
+                                    <inertia-link :href="route('cashRegisters.index')"
+                                        v-if="can('Listar Caja registradora')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -422,12 +458,13 @@
                                             </v-list-item-title>
                                         </v-list-item>
                                     </inertia-link>
+
                                 </v-list-item-group>
                             </v-card>
 
                         </v-list-group>
 
-                        <inertia-link :href="route('customers.index')" v-if="$page.props.user.role != 'seller'">
+                        <inertia-link :href="route('customers.index')" v-if="can('Listar Clientes')">
                             <v-list-item link :style="item_style()">
                                 <v-list-item-icon>
                                     <v-icon :style="item_style()">mdi-account-group</v-icon>
@@ -438,16 +475,18 @@
                             </v-list-item>
                         </inertia-link>
 
-                        <!-- <v-list-item link :style="item_style()" v-if="$page.props.user.role != 'seller'">
-                            <v-list-item-icon>
-                                <v-icon :style="item_style()">mdi-account-heart-outline</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title>EMPLEADOS</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item> -->
+                        <inertia-link :href="route('workers.index')" v-if="can('Listar Empleados')">
+                            <v-list-item link :style="item_style()">
+                                <v-list-item-icon>
+                                    <v-icon :style="item_style()">mdi-account-heart-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>EMPLEADOS</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </inertia-link>
 
-                        <inertia-link :href="route('providers.index')" v-if="$page.props.user.role != 'seller'">
+                        <inertia-link :href="route('providers.index')" v-if="can('Listar Proveedores')">
                             <v-list-item link :style="item_style()">
                                 <v-list-item-icon>
                                     <v-icon :style="item_style()">mdi-account-hard-hat</v-icon>
@@ -458,7 +497,7 @@
                             </v-list-item>
                         </inertia-link>
 
-                        <inertia-link :href="route('warehouses.index')" v-if="$page.props.user.role != 'seller'">
+                        <inertia-link :href="route('warehouses.index')" v-if="can('Listar Almacenes')">
                             <v-list-item link :style="item_style()">
                                 <v-list-item-icon>
                                     <v-icon :style="item_style()">mdi-warehouse</v-icon>
@@ -470,7 +509,7 @@
                         </inertia-link>
 
                         <!-- Utilidades -->
-                        <v-list-group v-if="$page.props.user.role != 'seller'">
+                        <v-list-group v-if="can('Listar Reportes')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-tools</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -478,9 +517,10 @@
                                 </v-list-item-content>
                             </template>
                             <v-card :color="colorSubMenu">
+
                                 <v-list-item-group>
 
-                                    <inertia-link :href="route('reports.index')">
+                                    <inertia-link :href="route('reports.index')" v-if="can('Listar Reportes')">
                                         <v-list-item :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -492,7 +532,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('barcodeGenerator.index')">
+                                    <inertia-link :href="route('barcodeGenerator.index')"
+                                        v-if="can('Generador de codigo de barras')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -508,7 +549,7 @@
                         </v-list-group>
 
                         <!-- Ajustes -->
-                        <v-list-group v-if="$page.props.user.role != 'seller'">
+                        <v-list-group v-if="can('Listar Ajustes')">
                             <v-icon slot="prependIcon" :style="item_style()">mdi-spin mdi-cog</v-icon>
                             <template v-slot:activator>
                                 <v-list-item-content :style="item_style()">
@@ -518,7 +559,7 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group>
 
-                                    <inertia-link :href="route('settings.index')">
+                                    <inertia-link :href="route('settings.index')" v-if="can('Listar Ajustes')">
                                         <v-list-item :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -530,7 +571,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('pettyCashes.index')">
+                                    <inertia-link :href="route('pettyCashes.index')"
+                                        v-if="can('Agregar Caja registradora')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -542,7 +584,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('printingMachines.index')">
+                                    <inertia-link :href="route('printingMachines.index')"
+                                        v-if="can('Listar Impresoras')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -560,97 +603,97 @@
 
                     </v-list-item-group>
                 </v-list>
-              </v-navigation-drawer>
-              <!-- CONTENIDO MENU VERTICAL END-->
-              
-              
-              <!-- Menú horizontal -->
-              <v-app-bar app :color="colorHeader" dense elevation="24">
+            </v-navigation-drawer>
+            <!-- CONTENIDO MENU VERTICAL END-->
+
+
+            <!-- Menú horizontal -->
+            <v-app-bar app :color="colorHeader" dense elevation="24">
                 <v-app-bar-nav-icon @click="drawer = !drawer" :style="item_style()"></v-app-bar-nav-icon>
-                
+
                 <v-toolbar-title>
-                  <!-- INICIO -->
+                    <!-- INICIO -->
                 </v-toolbar-title>
-                
+
                 <v-spacer></v-spacer>
                 <v-list-item right>
-                  <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
 
-                  <inertia-link :href="route('settings.index')" :style="item_style()" class="mr-3 mt-1">
-                    {{ $page.props.user.name }}
-                  </inertia-link>
+                    <inertia-link :href="route('settings.index')" :style="item_style()" class="mr-3 mt-1">
+                        {{ $page.props.user.name }}
+                    </inertia-link>
 
-                  <inertia-link :href="route('lowStocks.index')">
-                    <v-icon medium dark>mdi-bell</v-icon>
-                    <v-badge offset-y="-9" offset-x="-5" dot left overlap color="red" content="1"
-                    v-if="this.$page.props.flash.nrodts>0" v-show="true">
-                  </v-badge>
-                </inertia-link>
-              </v-list-item>
-              
-              <v-menu left bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn icon v-bind="attrs" v-on="on" :style="item_style()">
-                    <v-icon :style="item_style()">mdi-dots-vertical</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item @click="() => { }">
-                    <v-list-item-title>Perfil</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="logout">
-                    <v-list-item-title>Cerrar Session</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-              
+                    <inertia-link :href="route('lowStocks.index')">
+                        <v-icon medium dark>mdi-bell</v-icon>
+                        <v-badge offset-y="-9" offset-x="-5" dot left overlap color="red" content="1"
+                            v-if="this.$page.props.flash.nrodts > 0" v-show="true">
+                        </v-badge>
+                    </inertia-link>
+                </v-list-item>
+
+                <v-menu left bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on" :style="item_style()">
+                            <v-icon :style="item_style()">mdi-dots-vertical</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item @click="() => { }">
+                            <v-list-item-title>Perfil</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="logout">
+                            <v-list-item-title>Cerrar Session</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+
             </v-app-bar>
-          </template>
-          
-          <v-main>
+        </template>
+
+        <v-main>
             <v-container>
-              <slot></slot>
+                <slot></slot>
             </v-container>
             <pre>{{ $page }}</pre>
-          </v-main>
+        </v-main>
+
+        <!-- PIE DE PAGINA -->
+        <!-- <v-footer padless v-bind="color=" height="60px"> -->
+        <v-footer padless height="60px" :color="colorFooter" app>
+            <v-col class="text-center" cols="12" absolute :style="item_style()">
+                {{ new Date().getFullYear() }} — <strong>{{ this.$page.props.company.name }}</strong>
+            </v-col>
+        </v-footer>
+        <!-- PIE DE PAGINA END -->
+
+    </v-app>
+</template>
           
-          <!-- PIE DE PAGINA -->
-          <!-- <v-footer padless v-bind="color=" height="60px"> -->
-            <v-footer padless height="60px" :color="colorFooter" app>
-              <v-col class="text-center" cols="12" absolute :style="item_style()">
-                {{ new Date().getFullYear() }} — <strong>{{this.$page.props.company.name}}</strong>
-              </v-col>
-            </v-footer>
-            <!-- PIE DE PAGINA END -->
-            
-          </v-app>
-        </template>
-        
-        <script>
-        export default {
-          data() {
-            return {
-              drawer: null,
-              hidden: false,
-              logoEmpresa: this.$page.props.colors[0].logo,
-              colorMenu: this.$page.props.colors[0].color_menu,
-              colorSubMenu: this.$page.props.colors[0].color_sub_menu,
-              colorHeader: this.$page.props.colors[0].color_header,
-              colorFooter: this.$page.props.colors[0].color_footer,
-              colorText: this.$page.props.colors[0].color_text,
-            };
-          },
-          methods: {
-            
-            logout() {
-              this.$inertia.post(route('logout'));
-            },
-            item_style() {
-              return {
-                color: this.colorText,
-              }
-            }
-          }
+<script>
+export default {
+    data() {
+        return {
+            drawer: null,
+            hidden: false,
+            logoEmpresa: this.$page.props.colors[0].logo,
+            colorMenu: this.$page.props.colors[0].color_menu,
+            colorSubMenu: this.$page.props.colors[0].color_sub_menu,
+            colorHeader: this.$page.props.colors[0].color_header,
+            colorFooter: this.$page.props.colors[0].color_footer,
+            colorText: this.$page.props.colors[0].color_text,
         };
-      </script>
-      
+    },
+    methods: {
+
+        logout() {
+            this.$inertia.post(route('logout'));
+        },
+        item_style() {
+            return {
+                color: this.colorText,
+            }
+        }
+    }
+};
+</script>
+        
