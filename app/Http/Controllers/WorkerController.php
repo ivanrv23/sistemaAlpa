@@ -53,7 +53,7 @@ class WorkerController extends Controller
                     "roles" => $array_de_roles[0],
                 ];
             }),
-            'roles' => Role::where('companies_id', $company)->get(),
+            'roles' => Role::where('id', '>', 1)->get(),
             'companies' => Company::all(),
             'colors' => Customizer::where('companies_id', $company)->get(),
             'company' => Company::find(Auth::user()->companies_id),
