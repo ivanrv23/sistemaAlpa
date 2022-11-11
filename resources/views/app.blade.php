@@ -17,7 +17,7 @@
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
 
-        {{-- Para laravel permission --}}
+
         <script type="text/javascript">
             window.Laravel = {
                 csrfToken: "{{ csrf_token() }}",

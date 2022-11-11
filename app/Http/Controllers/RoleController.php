@@ -13,6 +13,14 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Roles')->only('index');
+        $this->middleware('can:Guardar Rol')->only('store');
+        $this->middleware('can:Actualizar Rol')->only('update');
+        $this->middleware('can:Eliminar Rol')->only('destroy');
+    } 
+
     public function index()
     {
         $company = Auth::user()->companies_id;
@@ -30,17 +38,23 @@ class RoleController extends Controller
             'colors' => Customizer::where('companies_id', $company)->get(),
             'companies' => Company::all(),
             'company' => Company::find($company),
-            'permisos' => Permission::all(),
+            'permisos' => Permission::where('level', '>', 1)->get(),
         ]);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'companies_id' => 'required',
+            'permisos' => 'required',
+        ]);
         // return $request;
         $role = Role::create([ 
             'name' => $request->name, 
             'companies_id' => $request->companies_id 
         ]);
+
         $role->permissions()->sync($request->permisos);
         return Redirect::route('roles.index')->with('message', 'Rol agregado');
 

@@ -95,7 +95,6 @@
                                                 counter
                                                 @click:append="show1 = !show1"
                                                 dense outlined 
-                                                :rules="[(v) => !!v || 'La contraseña es requerida']"
                                                 ></v-text-field>
                                             </v-col>
                                             <!-- Se mostrara cuando se valla a crear -->
@@ -123,31 +122,17 @@
                                                 ></v-text-field>
                                             </v-col>
 
-                                            <!-- <v-col cols="12" sm="6" md="6" >
+                                            <v-col cols="12" sm="12" md="12" >
+                                                <!-- {{ editedItem.roles }}  -->
                                                 <v-select
-                                                v-model="editedItem.role"
-                                                :items="roles"
-                                                item-text="name"
-                                                item-value="value"
-                                                label="Selecione permisos"
-                                                persistent-hint
-                                                hint="Selecione permiso" 
-                                                dense outlined required
-                                                :rules="[(v) => !!v || 'El rol es requerido']"
-                                                ></v-select>
-                                            </v-col>-->
-
-                                            <v-col cols="12" sm="6" md="6" >
-                                                {{ rol_selected }}
-                                                <v-select
-                                                v-model="rol_selected"
+                                                v-model="editedItem.roles"
                                                 :items="roles"
                                                 item-text="name"
                                                 item-value="id"
                                                 :menu-props="{ maxHeight: '400' }"
                                                 label="Selecione rol"
                                                 multiple chips
-                                                hint="Selecione rol"
+                                                hint="Debe Selecionar un solo rol"
                                                 persistent-hint
                                                 ></v-select>
                                             </v-col>
@@ -213,9 +198,6 @@
         },
         data () {
             return {
-
-                rol_selected: [],
-
                 // Para clave
                 show1: false,
 
@@ -233,10 +215,10 @@
 
                 editedItem: {
                     name: '',
-                    companies_id: 1,
+                    companies_id: this.$page.props.user.companies_id,
                     email: '',
                     password: '',
-                    role: [],
+                    roles: [],
                     created_at: '',
                     updated_at: '',
                     change_password: '',
@@ -245,13 +227,14 @@
 
                 defaultItem: {
                     name: '',
-                    companies_id: 1,
+                    companies_id: this.$page.props.user.companies_id,
                     email: '',
                     password: '',
-                    role: [],
+                    roles: [],
                     created_at: '',
                     updated_at: '',
                     change_password: '',
+                    
 
                 },
 

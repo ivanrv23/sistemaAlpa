@@ -44,19 +44,15 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="6">
+                    <v-col cols="12" sm="6" md="6" v-if="can('Listar Empresas')">
                       <v-select v-model="editedItem.companies_id" hint="Seleccione empresa"
                       :items="companies" item-text="name" item-value="id"
                       label="Seleccione empresa" single-line></v-select>
                     </v-col>
                     
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="editedItem.name" label="Nombre"
+                      <v-text-field v-model="editedItem.name" label="Nombre" dense
                       required></v-text-field>
-                    </v-col>
-                    
-                    <v-col cols="12">
-                      <p>Listado de permisos:</p>
                     </v-col>
                     
                       <v-col cols="12" sm="12" md="12" >
@@ -67,7 +63,7 @@
                         item-value="id"
                         :menu-props="{ maxHeight: '400' }"
                         label="Selecione Permisos"
-                        multiple 
+                        multiple  dense
                         hint="Selecione Permisos"
                         persistent-hint
                         ></v-select>
