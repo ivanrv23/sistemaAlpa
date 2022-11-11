@@ -70,7 +70,7 @@ class PurchaseController extends Controller
                             'purchases_id' => $d->purchases_id,
                             'products_id' => $d->products_id,
                             'product_name' => Product::find($d->products_id)->name,
-                            'mark_name'=>Mark::find(Product::find($d->products_id)->marks_id)->name,
+                            'mark_name' => Mark::find(Product::find($d->products_id)->marks_id)->name,
                             'amount' => $d->amount,
                             'price' => $d->price,
                             'transporte' => $d->transporte,
@@ -156,7 +156,7 @@ class PurchaseController extends Controller
      */
     public function store(StorePurchaseRequest $request)
     {
-        $purchase = new Purchase();       
+        $purchase = new Purchase();
 
         $purchase->companies_id = $request->companies_id;
         $purchase->providers_id = $request->providers_id;
@@ -267,6 +267,7 @@ class PurchaseController extends Controller
             $accountReceivable->debt = $request->total - $request->totalPago;
             $accountReceivable->save();
         }
+        // registra gasto en caja general
         $pettyCash = PettyCash::where('companies_id', $request->companies_id)->where('state', 1)->get();
         if ($request->cajaChica == 1 && $request->coins_id == 1) {
             $pettyCash[0]->update([
@@ -331,6 +332,8 @@ class PurchaseController extends Controller
      */
     public function destroy($id)
     {
+        $company = Auth::user()->companies_id;
+        // Actualizamos stock de productos
         $purchases = Purchase::find($id);
         $purchase_details = PurchaseDetail::where('purchases_id', $purchases->id)->get();
         foreach ($purchase_details as $key => $p) {
@@ -338,6 +341,32 @@ class PurchaseController extends Controller
             $products->update([
                 $products->stock -= $p->amount,
             ]);
+        }        
+        // Sumar Monto a caja General
+        $pettyCash = PettyCash::where('companies_id', $company)->where('state', 1)->get();
+        if (isset($pettyCash[0])) {
+            if ($purchases->state == 0) {
+                $cuentaPendiente = AccountPayable::where('purchases_id', $purchases->id)->get();
+                if ($purchases->coins_id == 1) {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_pen += $cuentaPendiente[0]->payment,
+                    ]);
+                } else {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_usd += $cuentaPendiente[0]->payment,
+                    ]);
+                }
+            } else {
+                if ($purchases->coins_id == 1) {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_pen += $purchases->total,
+                    ]);
+                } else {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_usd += $purchases->total,
+                    ]);
+                }
+            }
         }
         $purchases->delete();
         return Redirect::route('purchases.index')->with('message', 'Compra eliminada');

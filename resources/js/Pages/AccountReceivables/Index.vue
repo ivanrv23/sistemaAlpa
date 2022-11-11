@@ -115,6 +115,7 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-left"> PRODUCTO </th>
+                                                    <th class="text-left"> MARCA </th>
                                                     <th class="text-left"> CANTIDAD </th>
                                                     <th class="text-left"> PRECIO </th>
                                                     <th class="text-left"> IGV </th>
@@ -125,6 +126,7 @@
                                             <tbody>
                                                 <tr v-for="item in editedItem.details" :key="item.products_id">
                                                     <td>{{ item.product_name }}</td>
+                                                    <td>{{ item.marks_name }}</td>
                                                     <td>{{ item.quantity }}</td>
                                                     <td>{{ item.price }}</td>
                                                     <td>{{ item.igv }}</td>
@@ -176,7 +178,7 @@ export default {
             snackbar_color: '',
             headers: [
                 { text: 'CLIENTE', value: 'customers_name' },
-                { text: 'ULTIMO PAGO', value: 'payment' },
+                { text: 'TOTAL PAGADO', value: 'payment' },
                 { text: 'DEUDA', value: 'debt' },
                 { text: 'DESCRIPCION', value: 'description' },
                 { text: 'ACCIONES', value: 'actions', sortable: false },

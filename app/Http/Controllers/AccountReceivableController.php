@@ -11,6 +11,7 @@ use App\Models\Coin;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Customizer;
+use App\Models\Mark;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\PettyCash;
@@ -52,6 +53,7 @@ class AccountReceivableController extends Controller
                             'orders_id' => $d->orders_id,
                             'products_id' => $d->products_id,
                             'product_name' => Product::find($d->products_id)->name,
+                            'marks_name' => Mark::find(Product::find($d->products_id)->id)->name,
                             'quantity' => $d->quantity,
                             'price' => $d->price,
                             'discount' => $d->discount,
@@ -123,6 +125,7 @@ class AccountReceivableController extends Controller
         $accountReceivable = AccountReceivable::find($id);
         $id_order = AccountReceivable::where('id', $id)->value('orders_id');
         $orders = Order::find($id_order);
+        $totalPagado=$request->payment + $request->totalPago;
         $nvPago = $request->totalPago;
         $nvDeuda = $request->debt - $request->totalPago;
         if ($nvDeuda == 0) {
@@ -131,7 +134,7 @@ class AccountReceivableController extends Controller
             $nvestado = 0;
         };
         $accountReceivable->update([
-            'payment' => $nvPago,
+            'payment' => $totalPagado,
             'debt' => $nvDeuda,
             'description' => $request->description,
             'state' => $nvestado,

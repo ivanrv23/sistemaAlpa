@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateAccountPayableRequest;
 use App\Models\Coin;
 use App\Models\Company;
 use App\Models\Customizer;
+use App\Models\Mark;
 use App\Models\PettyCash;
 use App\Models\Product;
 use App\Models\ProofPayment;
@@ -51,8 +52,10 @@ class AccountPayableController extends Controller
                             'purchases_id' => $d->purchases_id,
                             'products_id' => $d->products_id,
                             'product_name' => Product::find($d->products_id)->name,
+                            'marks_name' => Mark::find(Product::find($d->products_id)->id)->name,
                             'amount' => $d->amount,
                             'price' => $d->price,
+                            'igv'=> $d->igv,
                             'total' => $d->total,
                         ];
                     }),

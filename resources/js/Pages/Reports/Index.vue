@@ -335,12 +335,29 @@
                                                 TOTAL EN COMPRAS
                                             </div>
                                             <v-list-item-title>
-                                                S/. {{ totalCompras }}
+                                                S/. {{ comprasSoles }}
                                             </v-list-item-title>
                                         </v-list-item-content>
 
                                         <v-list-item-avatar tile size="30">
-                                            <v-img contain src="/img/dashboard/totalVentas.png">
+                                            <v-img contain src="/img/dashboard/sol.png">
+                                            </v-img>
+                                        </v-list-item-avatar>
+                                    </v-list-item>
+                                </v-card>
+                                <v-card class="mx-5" max-width="180" outlined>
+                                    <v-list-item three-line>
+                                        <v-list-item-content>
+                                            <div>
+                                                TOTAL EN COMPRAS
+                                            </div>
+                                            <v-list-item-title>
+                                                $/. {{ comprasDolares }}
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+
+                                        <v-list-item-avatar tile size="30">
+                                            <v-img contain src="/img/dashboard/dolar.png">
                                             </v-img>
                                         </v-list-item-avatar>
                                     </v-list-item>
@@ -546,7 +563,8 @@ export default {
         'totalPagosDolares',
         'totalPrecioCompra',
         'totPurchases',
-        'totalCompras',
+        'comprasSoles',
+        'comprasDolares',
         'products',
         'totProducts',
         'inversionTotal',

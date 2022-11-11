@@ -635,7 +635,8 @@ export default {
                 return;
             }
             if (this.cajaChica != 0) {
-                if (this.pagoCompra > this.cajaChica[0].amount_pen) {
+                if(this.datosMoneda.code == 'PEN'){
+                    if (this.pagoCompra > Number.parseFloat(this.cajaChica[0].amount_pen)) {
                     this.snackbar_text = 'Dinero insuficiente';
                     this.snackbar_color = 'amber';
                     this.snackbar = true;
@@ -643,6 +644,18 @@ export default {
                 } else {
                     this.form.cajaChica = 1
                 }
+
+                }else{
+                    if (this.pagoCompra > Number.parseFloat(this.cajaChica[0].amount_usd)) {
+                    this.snackbar_text = 'Dinero insuficiente';
+                    this.snackbar_color = 'amber';
+                    this.snackbar = true;
+                    return;
+                } else {
+                    this.form.cajaChica = 1
+                }
+                }         
+                
             }
             // Datos Formulario
             this.form.exchange_rate = this.tipoCambio

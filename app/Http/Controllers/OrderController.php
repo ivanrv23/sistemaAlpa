@@ -350,7 +350,9 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
+        $company = Auth::user()->companies_id;
         $orders = Order::find($id);
+        // Actualizamos stock de productos
         $order_details = OrderDetail::where('orders_id', $orders->id)->get();
         foreach ($order_details as $key => $p) {
             $products = Product::find($p->products_id);
@@ -358,6 +360,7 @@ class OrderController extends Controller
                 $products->stock += $p->quantity,
             ]);
         }
+        // Actualizamos monto de caja
         $caja = CashRegister::find($orders->cash_registers_id);
         if ($orders->state == 0) {
             $cuentaPendiente = AccountReceivable::where('orders_id', $orders->id)->get();
@@ -379,6 +382,32 @@ class OrderController extends Controller
                 $caja->update([
                     $caja->amount_usd -= $orders->total,
                 ]);
+            }
+        }
+        // Monto a caja General
+        $pettyCash = PettyCash::where('companies_id', $company)->where('state', 1)->get();
+        if (isset($pettyCash[0])) {
+            if ($orders->state == 0) {
+                $cuentaPendiente = AccountReceivable::where('orders_id', $orders->id)->get();
+                if ($orders->coins_id == 1) {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_pen -= $cuentaPendiente[0]->payment,
+                    ]);
+                } else {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_usd -= $cuentaPendiente[0]->payment,
+                    ]);
+                }
+            } else {
+                if ($orders->coins_id == 1) {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_pen -= $orders->total,
+                    ]);
+                } else {
+                    $pettyCash[0]->update([
+                        $pettyCash[0]->amount_usd -= $orders->total,
+                    ]);
+                }
             }
         }
         $orders->delete();

@@ -99,7 +99,6 @@ class ReportController extends Controller
         // COMPRAS
         $totalComprasDiaSoles = 0;
         $totalComprasDiaDolares = 0;
-        $totalC_pen_usd = 0;
 
         $totalC_pen = Purchase::where('companies_id', $company)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 1)->get();
 
@@ -109,9 +108,8 @@ class ReportController extends Controller
         $totalC_usd = Purchase::where('companies_id', $company)->whereBetween('date', [$DateAndTimeInicio, $DateAndTimeFin])->where('coins_id', 2)->get();
 
         foreach ($totalC_usd as $key => $p) {
-            $totalComprasDiaDolares += ($p->total * $p->exchange_rate);
+            $totalComprasDiaDolares += $p->total;
         }
-        $totalC_pen_usd = ($totalComprasDiaSoles + $totalComprasDiaDolares);
 
         // PRODUCTOS
         $totInversion = 0;
@@ -146,7 +144,8 @@ class ReportController extends Controller
                 ->where("orders.coins_id", "=", 2)->where('orders.cash_registers_id', $cja)->where('orders.companies_id', $company)->select("*")
                 ->whereBetween('account_receivable_details.date', [$DateAndTimeInicio, $DateAndTimeFin])->count(),
             // N° Compras
-            'totalCompras' => number_format($totalC_pen_usd, 2),
+            'comprasSoles' => number_format($totalComprasDiaSoles, 2),
+            'comprasDolares' => number_format($totalComprasDiaDolares, 2),
             // N° Productos
             'totProducts' => Product::where('companies_id', $company)->count(),
             'inversionTotal' => number_format($totInversion, 2),
