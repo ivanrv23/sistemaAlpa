@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         $company = Auth::user()->companies_id;
         $roles = Role::all();
-        // $role_selected = DB::select('select * from model_has_roles where roles_id = ?', [1]);
+
         return Inertia::render('Users/Index', [
             'users' => User::all()->map(function ($user)
             {
@@ -47,6 +47,7 @@ class UserController extends Controller
                 return [
                     "id" => $user->id,
                     "companies_id" => $user->companies_id,
+                    "company_name" => Company::find($user->companies_id)->name,
                     "name" => $user->name,
                     "email" => $user->email,
                     "email_verified_at" => $user->email_verified_at,

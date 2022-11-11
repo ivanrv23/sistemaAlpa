@@ -206,6 +206,7 @@
                 dialogDelete: false,
                 headers: [
                     { text: 'NOMBRE', value: 'name' },
+                    { text: 'EMPRESA', value: 'company_name' },
                     { text: 'CORREO', value: 'email' },
                     { text: 'ACCIONES', value: 'actions', sortable: false },
                 ],
@@ -222,6 +223,7 @@
                     created_at: '',
                     updated_at: '',
                     change_password: '',
+                    company_name: '',
                     
                 },
 
@@ -234,6 +236,7 @@
                     created_at: '',
                     updated_at: '',
                     change_password: '',
+                    company_name: '',
                     
 
                 },

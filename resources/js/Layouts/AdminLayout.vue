@@ -609,9 +609,11 @@
                 <v-spacer></v-spacer>
                 <v-list-item right>
                   <v-spacer></v-spacer>
-                  <inertia-link :href="route('lowStocks.index')" :style="item_style()" class="mr-3 mt-1">
+
+                  <inertia-link :href="route('settings.index')" :style="item_style()" class="mr-3 mt-1">
                     {{ $page.props.user.name }}
                   </inertia-link>
+
                   <inertia-link :href="route('lowStocks.index')">
                     <v-icon medium dark>mdi-bell</v-icon>
                     <v-badge offset-y="-9" offset-x="-5" dot left overlap color="red" content="1"
