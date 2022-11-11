@@ -15,5 +15,6 @@ class AccountPayable extends Model
         'debt',
         'description',
         'state',
+        'date',
     ];
 }

@@ -179,7 +179,7 @@ class OrderController extends Controller
             $order->cash_registers_id = $request->cash_registers_id;
             $order->voucher_number = $request->voucher_number;
             $order->exchange_rate = $request->exchange_rate;
-            $order->total = $request->total;
+            $order->total = $request->totalPago;
             $order->date = $request->date;
             $order->description = $request->description;
             if ($request->totalPago < $request->total) {
@@ -196,7 +196,7 @@ class OrderController extends Controller
             $order->cash_registers_id = $request->cash_registers_id;
             $order->voucher_number = $request->voucher_number;
             $order->exchange_rate = $request->exchange_rate;
-            $order->total = $request->total;
+            $order->total = $request->totalPago;
             $order->date = $request->date;
             $order->description = $request->description;
             if ($request->totalPago < $request->total) {

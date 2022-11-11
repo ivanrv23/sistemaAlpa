@@ -165,7 +165,7 @@ class PurchaseController extends Controller
         $purchase->coins_id = $request->coins_id;
         $purchase->voucher_number = $request->voucher_number;
         $purchase->exchange_rate = $request->exchange_rate;
-        $purchase->total = $request->total;
+        $purchase->total = $request->totalPago;
         $purchase->date = $request->date;
         if ($request->totalPago < $request->total) {
             $purchase->state = 0;

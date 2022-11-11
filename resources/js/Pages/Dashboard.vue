@@ -4,11 +4,11 @@
         <template v-slot:company_name>
             <div>{{ company.name }}</div>
         </template>
-        
+
         <v-container>
             <v-row>
                 <!-- Caja -->
-                <v-col cols="12" sm="4" md="3" class="mt-5" v-if="this.$page.props.user.role != 'seller' &&cajaE==1">
+                <v-col cols="12" sm="4" md="3" class="mt-5" v-if="this.$page.props.user.role != 'seller' && cajaE == 1">
                     <v-hover v-slot="{ hover }" open-delay="200">
                         <inertia-link :href="route('pettyCashes.index')">
                             <v-card color="light-green" :elevation="hover ? 16 : 2">
@@ -17,8 +17,8 @@
                                         <v-list-item three-line>
                                             <v-list-item-content>
                                                 <div class="white--text">
-                                                    <h3>S/. {{cajaChicaSoles}}</h3>
-                                                    <h3>$. {{cajaChicaDolares}}</h3>
+                                                    <h3>S/. {{ cajaChicaSoles }}</h3>
+                                                    <h3>$. {{ cajaChicaDolares }}</h3>
                                                 </div>
                                                 <v-list-item-subtitle class="white--text">CAJA
                                                 </v-list-item-subtitle>
@@ -47,7 +47,7 @@
                                             <v-list-item-content>
                                                 <div class="white--text">
                                                     <v-list-item-subtitle class="headline mb-1 white--text">
-                                                        {{products}}
+                                                        {{ products }}
                                                     </v-list-item-subtitle>
                                                 </div>
                                                 <v-list-item-subtitle class="white--text">PRODUCTOS
@@ -68,7 +68,7 @@
                 </v-col>
 
                 <!-- Servicios -->
-                <v-col cols="12" sm="4" md="3" class="mt-5" v-if="this.services>0" v-show="true">
+                <v-col cols="12" sm="4" md="3" class="mt-5" v-if="this.services > 0" v-show="true">
                     <v-hover v-slot="{ hover }" open-delay="200">
                         <inertia-link :href="route('services.index')">
                             <v-card color="blue-grey" :elevation="hover ? 16 : 2">
@@ -150,8 +150,8 @@
                     </v-hover>
                 </v-col>
 
-                                <!-- Caja Soles -->
-                                <v-col cols="12" sm="4" md="3" class="mt-5">
+                <!-- Caja Soles -->
+                <v-col cols="12" sm="4" md="3" class="mt-5">
                     <v-hover v-slot="{ hover }" open-delay="200">
                         <v-card color="light-green" :elevation="hover ? 16 : 2">
                             <v-row>
@@ -160,7 +160,7 @@
                                         <v-list-item-content>
                                             <div>
                                                 <v-list-item-subtitle class="headline mb-1 white--text">
-                                                    S/ {{totalVentSol }}
+                                                    S/ {{ totalVentSol }}
                                                 </v-list-item-subtitle>
                                             </div>
                                             <v-list-item-subtitle class="white--text">CAJA SOLES
@@ -188,7 +188,7 @@
                                         <v-list-item-content>
                                             <div>
                                                 <v-list-item-subtitle class="headline mb-1 white--text">
-                                                    $. {{totalVentDolar }}
+                                                    $. {{ totalVentDolar }}
                                                 </v-list-item-subtitle>
                                             </div>
                                             <v-list-item-subtitle class="white--text">CAJA DOLARES
@@ -218,7 +218,7 @@
                                             <v-list-item-content>
                                                 <div>
                                                     <v-list-item-subtitle class="headline mb-1 white--text">
-                                                        {{accountsR }}
+                                                        {{ accountsR }}
                                                     </v-list-item-subtitle>
                                                 </div>
                                                 <v-list-item-subtitle class="white--text">CUENTAS X COBRAR
@@ -249,7 +249,7 @@
                                             <v-list-item-content>
                                                 <div>
                                                     <v-list-item-subtitle class="headline mb-1 white--text">
-                                                        {{accountsP }}
+                                                        {{ accountsP }}
                                                     </v-list-item-subtitle>
                                                 </div>
                                                 <v-list-item-subtitle class="white--text">CUENTAS X PAGAR

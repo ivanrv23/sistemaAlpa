@@ -41,7 +41,6 @@ class AccountReceivableController extends Controller
                     $id_moneda = Order::where('id', $p->orders_id)->value('coins_id'),
                     'coin' => Coin::find($id_moneda)->code,
                     'exchange_rate' => Order::where('id', $p->orders_id)->value('exchange_rate'),
-                    'total' => Order::where('id', $p->orders_id)->value('total'),
                     'date' => Order::where('id', $p->orders_id)->value('date'),
                     'payment' => $p->payment,
                     'debt'  => $p->debt,
@@ -123,7 +122,7 @@ class AccountReceivableController extends Controller
         $accountReceivable = AccountReceivable::find($id);
         $id_order = AccountReceivable::where('id', $id)->value('orders_id');
         $orders = Order::find($id_order);
-        $nvPago = $request->payment + $request->totalPago;
+        $nvPago = $request->totalPago;
         $nvDeuda = $request->debt - $request->totalPago;
         if ($nvDeuda == 0) {
             $nvestado = 1;
@@ -135,6 +134,7 @@ class AccountReceivableController extends Controller
             'debt' => $nvDeuda,
             'description' => $request->description,
             'state' => $nvestado,
+            'date' => date('Y-m-d'),
         ]);
         $orders->update([
             'state' => $nvestado,

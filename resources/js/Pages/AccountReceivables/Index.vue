@@ -30,7 +30,7 @@
                             VENTAS
                         </v-btn>
                     </inertia-link>
-                    <!-- Mensaje al presionar boton borrar -->
+                    <!-- Mensaje al presionar pagar -->
                     <v-dialog v-model="dialog" max-width="500px">
                         <v-card>
                             <v-card-title class="text-h5">DATOS DE DEUDA</v-card-title>
@@ -42,7 +42,6 @@
                                                 readonly>
                                             </v-text-field>
                                         </v-col>
-
                                         <v-col cols="12" md="6">
                                             <v-text-field label="Monto a pagar" v-model="editedItem.totalPago" min="0"
                                                 type="number" :max="editedItem.debt" required>
@@ -102,10 +101,6 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="3">
                                     <v-text-field label="TIPO DE CAMBIO" v-model="editedItem.exchange_rate" readonly>
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="3">
-                                    <v-text-field label="TOTAL" v-model="editedItem.total" readonly>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="3">
@@ -181,8 +176,7 @@ export default {
             snackbar_color: '',
             headers: [
                 { text: 'CLIENTE', value: 'customers_name' },
-                { text: 'TOTAL', value: 'total' },
-                { text: 'PAGO', value: 'payment' },
+                { text: 'ULTIMO PAGO', value: 'payment' },
                 { text: 'DEUDA', value: 'debt' },
                 { text: 'DESCRIPCION', value: 'description' },
                 { text: 'ACCIONES', value: 'actions', sortable: false },
@@ -198,7 +192,6 @@ export default {
                 customers_name:'',
                 coin: '',
                 exchange_rate: '',
-                total: '',
                 date: '',
                 payment: '',
                 debt: '',
@@ -214,7 +207,6 @@ export default {
                 customers_name:'',
                 coin: '',
                 exchange_rate: '',
-                total: '',
                 date: '',
                 payment: '',
                 debt: '',

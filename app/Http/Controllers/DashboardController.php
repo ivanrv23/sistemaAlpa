@@ -39,17 +39,31 @@ class DashboardController extends Controller
         }
 
         $DateAndTime = date('Y-m-d');
-        $totalV = Order::where('companies_id', $company_id)->where('date', $DateAndTime)
-            ->where('coins_id', 1)->get();
+        // ventas del dia en soles
         $totalVentasDiaSoles = 0;
+        $totalPagosDiaSoles=0;
+        $totalV = Order::where('companies_id', $company_id)->where('date', $DateAndTime)
+            ->where('coins_id', 1)->get();       
         foreach ($totalV as $key => $p) {
-            $totalVentasDiaSoles += $p->total;
+                $totalVentasDiaSoles += $p->total;
         }
+        $totalPs=AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
+        ->select("*")->where("orders.coins_id", "=", 1)->where('account_receivables.date', "=", $DateAndTime)->get();
+        foreach ($totalPs as $key => $s) {
+            $totalPagosDiaSoles += $s->payment;
+        }
+        // ventas del dia en dólares
+        $totalVentasDiaDolares = 0;
+        $totalPagosDiaDolares=0;
         $totalVd = Order::where('companies_id', $company_id)->where('date', $DateAndTime)
             ->where('coins_id', 2)->get();
-        $totalVentasDiaDolares = 0;
         foreach ($totalVd as $key => $p) {
-            $totalVentasDiaDolares += $p->total;
+                $totalVentasDiaDolares += $p->total;
+        }
+        $totalPd=AccountReceivable::join("orders", "account_receivables.orders_id", "=", "orders.id")
+        ->select("*")->where("orders.coins_id", "=", 1)->where('account_receivables.date', "=", $DateAndTime)->get();
+        foreach ($totalPd as $key => $s) {
+            $totalPagosDiaDolares += $s->payment;
         }
         $cajaChSoles = 0;
         $cajaChDolares = 0;
@@ -73,8 +87,8 @@ class DashboardController extends Controller
             'purchases' => Purchase::where('companies_id', $company_id)->where('date', $DateAndTime)->count(),
             'colors' => Customizer::where('companies_id', $company_id)->get(),
             'company' => Company::find($company_id),
-            'totalVentSol' => number_format($totalVentasDiaSoles, 2),
-            'totalVentDolar' => number_format($totalVentasDiaDolares, 2),
+            'totalVentSol' => number_format($totalVentasDiaSoles + $totalPagosDiaSoles, 2),
+            'totalVentDolar' => number_format($totalVentasDiaDolares+$totalPagosDiaDolares, 2),
             'cajaE' => $existeCaja,
             'cajaChicaSoles' => number_format($cajaChSoles, 2),
             'cajaChicaDolares' => number_format($cajaChDolares, 2),
