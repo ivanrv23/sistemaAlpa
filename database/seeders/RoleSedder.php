@@ -179,13 +179,13 @@ class RoleSedder extends Seeder
         Permission::create([ 'level'=> 2, 'name' => 'Actualizar Caja general'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Eliminar Caja general'])->syncRoles([$master, $admin]);
 
-        Permission::create([ 'level'=> 2, 'name' => 'Listar Cuentas'])->syncRoles([$master, $admin]);
-        Permission::create([ 'level'=> 2, 'name' => 'Agregar Cuentas'])->syncRoles([$master, $admin]);
-        Permission::create([ 'level'=> 2, 'name' => 'Editar Cuentas'])->syncRoles([$master, $admin]);
-        Permission::create([ 'level'=> 2, 'name' => 'Mostar Cuentas'])->syncRoles([$master, $admin]);
-        Permission::create([ 'level'=> 2, 'name' => 'Guardar Cuentas'])->syncRoles([$master, $admin]);
-        Permission::create([ 'level'=> 2, 'name' => 'Actualizar Cuentas'])->syncRoles([$master, $admin]);
-        Permission::create([ 'level'=> 2, 'name' => 'Eliminar Cuentas'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Listar Cuentas Bancarias'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Agregar Cuentas Bancarias'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Editar Cuentas Bancarias'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Mostar Cuentas Bancarias'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Guardar Cuentas Bancarias'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Actualizar Cuentas Bancarias'])->syncRoles([$master, $admin]);
+        Permission::create([ 'level'=> 2, 'name' => 'Eliminar Cuentas Bancarias'])->syncRoles([$master, $admin]);
 
 
         Permission::create([ 'level'=> 2, 'name' => 'Listar Caja registradora'])->syncRoles([$master, $admin]);

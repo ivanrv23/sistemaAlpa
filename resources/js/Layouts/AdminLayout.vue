@@ -571,7 +571,7 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('bankAccounts.index')"  v-if="can('Listar Cuentas')">
+                                    <inertia-link :href="route('bankAccounts.index')"  v-if="can('Listar Cuentas Bancarias')">
                                         <v-list-item :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>

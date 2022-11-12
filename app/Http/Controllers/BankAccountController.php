@@ -15,10 +15,10 @@ class BankAccountController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:Listar Cuentas')->only('index');
-        $this->middleware('can:Guardar Cuentas')->only('store');
-        $this->middleware('can:Actualizar Cuentas')->only('update');
-        $this->middleware('can:Eliminar Cuentas')->only('destroy');
+        $this->middleware('can:Listar Cuentas Bancarias')->only('index');
+        $this->middleware('can:Guardar Cuentas Bancarias')->only('store');
+        $this->middleware('can:Actualizar Cuentas Bancarias')->only('update');
+        $this->middleware('can:Eliminar Cuentas Bancarias')->only('destroy');
     }
     /**
      * Display a listing of the resource.
