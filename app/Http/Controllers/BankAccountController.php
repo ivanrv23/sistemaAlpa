@@ -13,6 +13,13 @@ use Inertia\Inertia;
 
 class BankAccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Listar Cuentas')->only('index');
+        $this->middleware('can:Guardar Cuentas')->only('store');
+        $this->middleware('can:Actualizar Cuentas')->only('update');
+        $this->middleware('can:Eliminar Cuentas')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
