@@ -301,6 +301,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout'
+import { methods } from '@chenfengyuan/vue-qrcode'
 
 export default {
     components: {
