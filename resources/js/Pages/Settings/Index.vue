@@ -30,6 +30,11 @@
                                                 </v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="4" md="4">
+                                                <v-text-field label="Abreviatura/Nombre corto"
+                                                    v-model="editedItem.abbreviation">
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="4" md="4">
                                                 <v-text-field label="Ruc" type="number" v-model="editedItem.ruc">
                                                 </v-text-field>
                                             </v-col>
@@ -71,7 +76,8 @@
                                                             nudge-left="16" :close-on-content-click="false">
                                                             <template v-slot:activator="{ on }">
                                                                 <v-card elevation="24">
-                                                                <div :style="swatchStyleMenu" v-on="on" /></v-card>
+                                                                    <div :style="swatchStyleMenu" v-on="on" />
+                                                                </v-card>
                                                             </template>
                                                             <v-card>
                                                                 <v-card-text class="pa-0">
@@ -94,7 +100,8 @@
                                                             nudge-left="16" :close-on-content-click="false">
                                                             <template v-slot:activator="{ on }">
                                                                 <v-card elevation="24">
-                                                                <div :style="swatchStyleSubMenu" v-on="on" /></v-card>
+                                                                    <div :style="swatchStyleSubMenu" v-on="on" />
+                                                                </v-card>
                                                             </template>
                                                             <v-card>
                                                                 <v-card-text class="pa-0">
@@ -117,7 +124,8 @@
                                                             nudge-left="16" :close-on-content-click="false">
                                                             <template v-slot:activator="{ on }">
                                                                 <v-card elevation="24">
-                                                                <div :style="swatchStyleHeader" v-on="on" /></v-card>
+                                                                    <div :style="swatchStyleHeader" v-on="on" />
+                                                                </v-card>
                                                             </template>
                                                             <v-card>
                                                                 <v-card-text class="pa-0">
@@ -140,7 +148,8 @@
                                                             nudge-left="16" :close-on-content-click="false">
                                                             <template v-slot:activator="{ on }">
                                                                 <v-card elevation="24">
-                                                                <div :style="swatchStyleFooter" v-on="on" /></v-card>
+                                                                    <div :style="swatchStyleFooter" v-on="on" />
+                                                                </v-card>
                                                             </template>
                                                             <v-card>
                                                                 <v-card-text class="pa-0">
@@ -163,7 +172,8 @@
                                                             nudge-left="16" :close-on-content-click="false">
                                                             <template v-slot:activator="{ on }">
                                                                 <v-card elevation="24">
-                                                                <div :style="swatchStyleText" v-on="on" /></v-card>
+                                                                    <div :style="swatchStyleText" v-on="on" />
+                                                                </v-card>
                                                             </template>
                                                             <v-card>
                                                                 <v-card-text class="pa-0">
@@ -252,7 +262,7 @@ export default {
                 province: this.companies[0].province,
                 district: this.companies[0].district,
                 country_code: this.companies[0].country_code,
-                customizers_id:this.customizers[0].id,
+                customizers_id: this.customizers[0].id,
                 color_menu: this.customizers[0].color_menu,
                 color_sub_menu: this.customizers[0].color_sub_menu,
                 color_header: this.customizers[0].color_header,
@@ -343,7 +353,7 @@ export default {
                 province: this.editedItem.province,
                 district: this.editedItem.district,
                 country_code: this.editedItem.country_code,
-                customizers_id:this.editedItem.customizers_id,
+                customizers_id: this.editedItem.customizers_id,
                 color_menu: this.editedItem.color_menu,
                 color_sub_menu: this.editedItem.color_sub_menu,
                 color_header: this.editedItem.color_header,

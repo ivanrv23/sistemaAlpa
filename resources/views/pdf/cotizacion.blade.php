@@ -64,7 +64,7 @@
                 </td>
                 <td>
                     <div>
-                        <h2 style="text-align: right"> {{ $company->name }}</h2>
+                        <h2 style="text-align: right"> {{ $company->abbreviation }}</h2>
                     </div>
                 </td>
             </tr>
@@ -83,6 +83,18 @@
                 <td style="font-size: 18px">
                     <p><strong>Empresa:</strong> {{ $company->name }} <br> <strong>Teléfonos:</strong>
                         {{ $company->phone }}</p>
+                    @php
+                        if ($account != null) {
+                            echo '<p><strong>DATOS CUENTA:</strong> <br><strong>Entidad Bancaria: </strong>' .
+                                $account->banking_entity .
+                                '<br> <strong>N°. Cuenta: </strong>' .
+                                $account->account_number .
+                                '<br>
+                        <strong>CCI: </strong>' .
+                                $account->cci .
+                                '</p>';
+                        }
+                    @endphp
                     <p><strong>Cliente:</strong> {{ $customers_name }}</p>
                 </td>
                 <td>
@@ -145,19 +157,19 @@
 
     {{-- Calculando total- --}}
     @php
-    if ($quotation->igv=='Más IGV') {
-        foreach ($quotation_details as $item) {
-            $total += $item['quantity']*$item['price'];
-            $igv += $item['igv'];
+        if ($quotation->igv == 'Más IGV') {
+            foreach ($quotation_details as $item) {
+                $total += $item['quantity'] * $item['price'];
+                $igv += $item['igv'];
+            }
+            $subTot = $total;
+        } else {
+            foreach ($quotation_details as $item) {
+                $total += $item['quantity'] * $item['price'];
+                $igv += $item['igv'];
+            }
+            $subTot = $total - $igv;
         }
-        $subTot=$total;
-    } else {
-        foreach ($quotation_details as $item) {
-            $total += $item['quantity']*$item['price'];
-            $igv += $item['igv'];
-        }
-        $subTot=$total-$igv;
-    }
     @endphp
 
     <br>
@@ -166,19 +178,19 @@
             <tr>
                 <th style="font-size: 20px" class="border">Sub Total</th>
                 <td style="font-size: 20px; background-color:white" class="border text-center">
-                    {{ number_format($subTot, 2, '.', ',')}}</td>
+                    {{ number_format($subTot, 2, '.', ',') }}</td>
             </tr>
-            
+
             <tr>
                 <th style="font-size: 20px" class="border">IGV</th>
                 <td style="font-size: 20px; background-color:white" class="border text-center">
                     {{ number_format($igv, 2, '.', ',') }}</td>
             </tr>
-            
+
             <tr>
                 <th style="font-size: 20px" class="border">Total</th>
                 <td style="font-size: 20px; background-color:white" class="border text-center">
-                    {{ number_format(($subTot+$igv), 2, '.', ',')}}</td>
+                    {{ number_format($subTot + $igv, 2, '.', ',') }}</td>
             </tr>
         </thead>
         </tbody>

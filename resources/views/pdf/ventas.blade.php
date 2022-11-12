@@ -86,7 +86,7 @@ $medidaTicket = 180;
 <body>
     <div class="contenedor">
         <img width="90" src="{{ public_path($customizer->logo) }}" alt="Logo Empresa">
-        <h1>{{ $company->name }}</h1>
+        <h1>{{ $company->abbreviation }}</h1>
         <h2>R.U.C. {{ $company->ruc }}</h2>
         <h6>Dirección: {{ $company->address }}</h6>
         <h6>Teléfono: {{ $company->phone }}</h6>        

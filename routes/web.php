@@ -88,6 +88,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('dashboard/cashRegisters', CashRegisterController::class)->except('create', 'edit', 'show');
     // Route::get('dashboard/reports/{datInicio?}/{datFin?}', [ReportController::class, 'index'])->name('reports.index');
     Route::get('dashboard/reports/{nroCaja?}/{datInicio?}/{datFin?}', [ReportController::class, 'index'])->name('reports.index');
+    Route::resource('dashboard/bankAccounts', BankAccountController::class)->except('show');
     Route::resource('dashboard/workers', WorkerController::class);
 
     Route::resource('dashboard/roles', RoleController::class);

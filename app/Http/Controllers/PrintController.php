@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ProductsExport;
+use App\Models\BankAccount;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Customer;
@@ -72,6 +73,12 @@ class PrintController extends Controller
         $subTot=0;
         $quotation = Order::find($id); // Buscando cotización
         $customers_name=Customer::find($quotation->customers_id)->name;
+        $nraccount = BankAccount::where('companies_id', Auth::user()->companies_id)->count();
+        if($nraccount>0){
+            $account = BankAccount::where('companies_id', Auth::user()->companies_id)->get()[0];
+        }else{
+            $account=null;
+        }
         $quotation_details = OrderDetail::where('orders_id', $quotation->id)->get()->map(function ($o) {
             return [
                 'quantity' => $o->quantity,
@@ -83,7 +90,7 @@ class PrintController extends Controller
                 'subTotal' => $o->subTotal
             ];
         });
-        $pdf = Pdf::loadView('pdf.cotizacion', compact('quotation','customers_name', 'quotation_details', 'company', 'customizer', 'total','igv','subTot'));
+        $pdf = Pdf::loadView('pdf.cotizacion', compact('quotation','customers_name', 'quotation_details', 'company', 'customizer', 'total','igv','subTot','account'));
 
         return $pdf->stream('cotizacion.pdf');
     }

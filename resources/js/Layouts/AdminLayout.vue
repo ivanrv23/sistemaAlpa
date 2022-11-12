@@ -571,6 +571,18 @@
                                         </v-list-item>
                                     </inertia-link>
 
+                                    <inertia-link :href="route('bankAccounts.index')">
+                                        <v-list-item :style="item_style()">
+                                            <v-list-item-icon>
+                                                <v-spacer></v-spacer>
+                                                <v-icon small :style="item_style()">mdi-card-bulleted</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-title>
+                                                <h5>N° CUENTA</h5>
+                                            </v-list-item-title>
+                                        </v-list-item>
+                                    </inertia-link>
+
                                     <inertia-link :href="route('pettyCashes.index')"
                                         v-if="can('Agregar Caja registradora')">
                                         <v-list-item link :style="item_style()">
@@ -661,7 +673,7 @@
         <!-- <v-footer padless v-bind="color=" height="60px"> -->
         <v-footer padless height="60px" :color="colorFooter" app>
             <v-col class="text-center" cols="12" absolute :style="item_style()">
-                {{ new Date().getFullYear() }} — <strong>{{ this.$page.props.company.name }}</strong>
+                {{ new Date().getFullYear() }} — <strong>{{ this.$page.props.company.abbreviation }}</strong>
             </v-col>
         </v-footer>
         <!-- PIE DE PAGINA END -->
