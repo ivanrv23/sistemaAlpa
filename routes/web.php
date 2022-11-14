@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountPayableController;
 use App\Http\Controllers\AccountReceivableController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\BarcodeGeneratorController;
+use App\Http\Controllers\BlankPageController;
 use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CoinController;
@@ -36,6 +37,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkerController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,7 +111,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/products_export', [ProductController::class, 'exportProducts'])->name('export_productos');
     Route::get('/export_cotizacion', [QuotationController::class, 'exportCotizacion'])->name('export_productos');
 
+    Route::resource('dashboard/blankPage', BlankPageController::class)->except('show');
 
-
-    
 });
