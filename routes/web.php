@@ -115,4 +115,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/products_export', [ProductController::class, 'exportProducts'])->name('export_productos');
     Route::get('/export_cotizacion', [QuotationController::class, 'exportCotizacion'])->name('export_productos');
 
+    Route::resource('dashboard/blankPage', BlankPageController::class)->except('show');
+
 });
