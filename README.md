@@ -40,7 +40,6 @@ public function handle($request, $next)
 
         $this->limiter->clear($request);
 
-        // return $next($request);
         return redirect(RouteServiceProvider::HOME);
     }
 ```
