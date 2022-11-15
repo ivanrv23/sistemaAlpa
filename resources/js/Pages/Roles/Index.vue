@@ -51,7 +51,7 @@
                     </v-col>
                     
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="editedItem.name" label="Nombre" dense
+                      <v-text-field v-model="editedItem.name" label="Nombre" 
                       required></v-text-field>
                     </v-col>
                     
