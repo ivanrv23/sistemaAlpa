@@ -171,6 +171,7 @@ class RoleSedder extends Seeder
         Permission::create([ 'level'=> 2, 'name' => 'Actualizar Impresora'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Eliminar Impresora'])->syncRoles([$master, $admin]);
 
+        // petty cashes
         Permission::create([ 'level'=> 2, 'name' => 'Listar Caja general'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Agregar Caja general'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Editar Caja general'])->syncRoles([$master, $admin]);
@@ -187,7 +188,7 @@ class RoleSedder extends Seeder
         Permission::create([ 'level'=> 2, 'name' => 'Actualizar Cuentas Bancarias'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Eliminar Cuentas Bancarias'])->syncRoles([$master, $admin]);
 
-
+        // 
         Permission::create([ 'level'=> 2, 'name' => 'Listar Caja registradora'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Agregar Caja registradora'])->syncRoles([$master, $admin]);
         Permission::create([ 'level'=> 2, 'name' => 'Editar Caja registradora'])->syncRoles([$master, $admin]);

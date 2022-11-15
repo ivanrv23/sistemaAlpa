@@ -106,12 +106,12 @@
                 </v-toolbar>
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="editItem(item)">
+            <template  v-slot:[`item.actions`]="{ item }">
+                <v-icon v-if="can('Editar Cuentas Bancarias')" small class="mr-2" @click="editItem(item)">
                     mdi-pencil
                 </v-icon>
 
-                <v-icon small @click="deleteItem(item)">
+                <v-icon v-if="can('Eliminar Cuentas Bancarias')" small @click="deleteItem(item)">
                     mdi-delete
                 </v-icon>
             </template>

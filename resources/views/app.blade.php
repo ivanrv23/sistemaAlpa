@@ -19,10 +19,18 @@
 
 
         <script type="text/javascript">
-            window.Laravel = {
-                csrfToken: "{{ csrf_token() }}",
+            @auth
+                window.Laravel = {
                 jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
             }
+            @else
+                window.Laravel = {
+                    jsPermissions: []
+                }
+                window.Permissions = [];
+            @endauth
+
+            
         </script>
     </head>
     <body class="font-sans antialiased">

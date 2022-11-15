@@ -124,11 +124,11 @@
             </template>
 
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon :disabled="editB" small class="mr-2" @click="editItem(item)">
+                <v-icon v-if="can('Editar Servicio')" small class="mr-2" @click="editItem(item)">
                     mdi-pencil
                 </v-icon>
 
-                <v-icon :disabled="deleteB" small @click="deleteItem(item)">
+                <v-icon v-if="can('Eliminar Servicio')" small @click="deleteItem(item)">
                     mdi-delete
                 </v-icon>
             </template>
@@ -159,8 +159,6 @@ export default {
     },
     data() {
         return {
-            editB: true,
-            deleteB: true,
 
             // Validaciones
             requiredField: [
@@ -214,13 +212,6 @@ export default {
                 description: '',
             },
 
-        }
-    },
-    // Metodos al cargar formulario
-    mounted() {
-        if (this.$page.props.user.role != 'seller') {
-            this.editB = false
-            this.deleteB = false
         }
     },
 

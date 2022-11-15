@@ -51,7 +51,7 @@
                     </v-col>
                     
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="editedItem.name" label="Nombre" dense
+                      <v-text-field v-model="editedItem.name" label="Nombre" 
                       required></v-text-field>
                     </v-col>
                     
@@ -103,11 +103,11 @@
       </template>
       
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)">
+        <v-icon v-if="can('Editar Rol')" small class="mr-2" @click="editItem(item)">
           mdi-pencil
         </v-icon>
         
-        <v-icon small @click="deleteItem(item)">
+        <v-icon v-if="can('Eliminar Rol')" small @click="deleteItem(item)">
           mdi-delete
         </v-icon>
       </template>

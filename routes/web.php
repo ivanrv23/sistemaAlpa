@@ -50,6 +50,10 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/get-permissions', function () {
+    return auth()->check()?auth()->user()->jsPermissions():0;
+});
+
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
 //         'canLogin' => Route::has('login'),
@@ -110,5 +114,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     
     Route::get('/products_export', [ProductController::class, 'exportProducts'])->name('export_productos');
     Route::get('/export_cotizacion', [QuotationController::class, 'exportCotizacion'])->name('export_productos');
+
+    Route::resource('dashboard/blankPage', BlankPageController::class)->except('show');
 
 });

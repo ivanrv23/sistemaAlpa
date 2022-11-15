@@ -57,7 +57,7 @@
                 <v-icon small class="mr-2" @click="viewItem(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon small @click="deleteItem(item)">
+                <v-icon v-if="can('Eliminar Cotizacion')" small @click="deleteItem(item)">
                     mdi-delete
                 </v-icon>
             </template>
