@@ -50,6 +50,10 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/get-permissions', function () {
+    return auth()->check()?auth()->user()->jsPermissions():0;
+});
+
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
 //         'canLogin' => Route::has('login'),

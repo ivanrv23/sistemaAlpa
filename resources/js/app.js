@@ -13,6 +13,12 @@ import { InertiaProgress } from '@inertiajs/progress'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
+// axios.get('/get-permissions').then(
+//   response => {
+//     window.Laravel.jsPermissions = response.data;
+//   }
+// );
+
 import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
 
 
