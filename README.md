@@ -31,7 +31,7 @@ composer install
 ```sh
 npm run dev
 ```
-- Corregir el método handle en: vendor\laravel\fortify\src\Actions\PrepareAuthenticatedSession.php:
+- Cambiar la function handle en: vendor\laravel\fortify\src\Actions\PrepareAuthenticatedSession.php:
 
 ```sh
 public function handle($request, $next)
