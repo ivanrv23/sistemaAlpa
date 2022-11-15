@@ -301,19 +301,19 @@
                             <v-card :color="colorSubMenu">
                                 <v-list-item-group :style="item_style()">
 
-                                    <!-- <inertia-link :href="route('quotations.index')" v-if="can('Listar Cotizaciones')">
-                              <v-list-item link :style="item_style()">
-                                <v-list-item-icon>
-                                  <v-spacer></v-spacer>
-                                  <v-icon :style="item_style()" small>mdi-clipboard-text</v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-title>
-                                  <h5>LISTA DE COTIZACIONES</h5>
-                                </v-list-item-title>
-                              </v-list-item>
-                            </inertia-link> -->
+                                    <inertia-link :href="route('quotations.index')" v-if="can('Listar Cotizaciones')">
+                                        <v-list-item link :style="item_style()">
+                                            <v-list-item-icon>
+                                                <v-spacer></v-spacer>
+                                                <v-icon :style="item_style()" small>mdi-clipboard-text</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-title>
+                                                <h5>LISTA DE COTIZACIONES</h5>
+                                            </v-list-item-title>
+                                        </v-list-item>
+                                    </inertia-link>
 
-                                    <inertia-link :href="route('quotations.create')" v-if="can('Agregar Cotizacion')">
+                                    <!-- <inertia-link :href="route('quotations.create')" v-if="can('Agregar Cotizacion')">
                                         <v-list-item link :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -323,7 +323,7 @@
                                                 <h5>NUEVA COTIZACIÓN</h5>
                                             </v-list-item-title>
                                         </v-list-item>
-                                    </inertia-link>
+                                    </inertia-link> -->
 
                                 </v-list-item-group>
                             </v-card>
@@ -571,7 +571,8 @@
                                         </v-list-item>
                                     </inertia-link>
 
-                                    <inertia-link :href="route('bankAccounts.index')"  v-if="can('Listar Cuentas Bancarias')">
+                                    <inertia-link :href="route('bankAccounts.index')"
+                                        v-if="can('Listar Cuentas Bancarias')">
                                         <v-list-item :style="item_style()">
                                             <v-list-item-icon>
                                                 <v-spacer></v-spacer>
@@ -666,7 +667,7 @@
             <v-container>
                 <slot></slot>
             </v-container>
-            <pre>{{ $page }}</pre>
+            <!-- <pre>{{ $page }}</pre> -->
         </v-main>
 
         <!-- PIE DE PAGINA -->

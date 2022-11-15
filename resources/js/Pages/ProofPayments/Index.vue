@@ -96,10 +96,10 @@
             </template>
             <!-- Acciones de la tabla -->
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="editItem(item)">
+                <v-icon v-if="can('Editar Comprobante de pago')" small class="mr-2" @click="editItem(item)">
                     mdi-pencil
                 </v-icon>
-                <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+                <v-icon v-if="can('Eliminar Comprobante de pago')" small @click="deleteItem(item)"> mdi-delete </v-icon>
             </template>
         </v-data-table>
 
