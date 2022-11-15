@@ -31,6 +31,19 @@ composer install
 ```sh
 npm run dev
 ```
+- Corregir el método handle en: vendor\laravel\fortify\src\Actions\PrepareAuthenticatedSession.php:
+
+```sh
+public function handle($request, $next)
+    {
+        $request->session()->regenerate();
+
+        $this->limiter->clear($request);
+
+        // return $next($request);
+        return redirect(RouteServiceProvider::HOME);
+    }
+```
 - Iniciar configuracion:
 
 ```sh
