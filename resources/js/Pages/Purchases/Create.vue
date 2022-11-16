@@ -622,11 +622,20 @@ export default {
         send_form() {
             if (this.datosComprobante == '' ||
                 this.datosMoneda == '' || this.datosProveedor == '' || this.datosMetPago == ''
-                || this.form.voucher_number == '' || this.tipoCambio == '' || this.tipoCambio < 0) {
+                || this.form.voucher_number == '') {
                 this.snackbar_text = 'Completar datos';
                 this.snackbar_color = 'red darken-4';
                 this.snackbar = true;
                 return;
+            }
+            if (this.datosMoneda.code == 'USD') {
+                if (this.tipoCambio == '' || Number.parseFloat(this.tipoCambio) < 0) {
+                    this.snackbar_text = 'Tipo de cambio incorrecto';
+                    this.snackbar_color = 'green';
+                    this.snackbar = true;
+                    return;
+                }
+
             }
             if (this.pagoCompra < 0 || this.pagoCompra > this.form.total) {
                 this.snackbar_text = 'Monto incorrecto';
@@ -635,27 +644,27 @@ export default {
                 return;
             }
             if (this.cajaChica != 0) {
-                if(this.datosMoneda.code == 'PEN'){
+                if (this.datosMoneda.code == 'PEN') {
                     if (this.pagoCompra > Number.parseFloat(this.cajaChica[0].amount_pen)) {
-                    this.snackbar_text = 'Dinero insuficiente';
-                    this.snackbar_color = 'amber';
-                    this.snackbar = true;
-                    return;
+                        this.snackbar_text = 'Dinero insuficiente';
+                        this.snackbar_color = 'amber';
+                        this.snackbar = true;
+                        return;
+                    } else {
+                        this.form.cajaChica = 1
+                    }
+
                 } else {
-                    this.form.cajaChica = 1
+                    if (this.pagoCompra > Number.parseFloat(this.cajaChica[0].amount_usd)) {
+                        this.snackbar_text = 'Dinero insuficiente';
+                        this.snackbar_color = 'amber';
+                        this.snackbar = true;
+                        return;
+                    } else {
+                        this.form.cajaChica = 1
+                    }
                 }
 
-                }else{
-                    if (this.pagoCompra > Number.parseFloat(this.cajaChica[0].amount_usd)) {
-                    this.snackbar_text = 'Dinero insuficiente';
-                    this.snackbar_color = 'amber';
-                    this.snackbar = true;
-                    return;
-                } else {
-                    this.form.cajaChica = 1
-                }
-                }         
-                
             }
             // Datos Formulario
             this.form.exchange_rate = this.tipoCambio

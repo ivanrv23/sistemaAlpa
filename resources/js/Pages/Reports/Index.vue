@@ -192,7 +192,7 @@
                                                             <th class="text-left"> PRODUCTO </th>
                                                             <th class="text-left"> MARCA </th>
                                                             <th class="text-left"> CANTIDAD </th>
-                                                            <th class="text-left"> PRECIO COMPRA </th>
+                                                            <!-- <th class="text-left"> PRECIO COMPRA </th> -->
                                                             <th class="text-left"> PRECIO VENTA </th>
                                                             <th class="text-left"> IGV </th>
                                                             <th class="text-left"> SUB TOTAL </th>
@@ -205,7 +205,7 @@
                                                             <td>{{ item.product_name }}</td>
                                                             <td>{{ item.mark_name }}</td>
                                                             <td>{{ item.quantity }}</td>
-                                                            <td>{{ item.product_purchase_price }}</td>
+                                                            <!-- <td>{{ item.product_purchase_price }}</td> -->
                                                             <td>{{ item.price }}</td>
                                                             <td>{{ item.igv }}</td>
                                                             <td>{{ item.subTotal }}</td>
@@ -301,9 +301,105 @@
                                 <v-spacer></v-spacer>
                             </v-toolbar>
                         </template>
+                        <!-- Acciones -->
+                        <template v-slot:[`item.actions`]="{ item }">
+                            <v-icon small class="mr-2" @click="viewItemP(item)">
+                                mdi-eye
+                            </v-icon>
+                        </template>
                     </v-data-table>
                 </v-tab-item>
                 <!-- Fin Pagos Día -->
+
+                <!-- Ver detalles Pago -->
+                <template>
+                    <v-row justify="center">
+                        <v-dialog v-model="dialog_viewVentasP" max-width="700">
+
+                            <v-card>
+                                <v-card-title class="text-h5">
+                                    Detalle de Venta
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="CLIENTE" v-model="editedItemVentasP.customers_name"
+                                                readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="METODO PAGO" v-model="editedItemVentasP.payment_method"
+                                                readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="COMPROBANTE" v-model="editedItemVentasP.proof_payment"
+                                                readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="MONEDA" v-model="editedItemVentasP.coin" readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="Tipo de cambio"
+                                                v-model="editedItemVentasP.exchange_rate" readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="TOTAL" v-model="editedItemVentasP.total" readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="3">
+                                            <v-text-field label="FECHA" v-model="editedItemVentasP.date" readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-card elevation="2">
+                                        <v-card-text>
+                                            <v-simple-table fixed-header height="250px">
+                                                <template v-slot:default>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-left"> PRODUCTO </th>
+                                                            <th class="text-left"> MARCA </th>
+                                                            <th class="text-left"> CANTIDAD </th>
+                                                            <!-- <th class="text-left"> PRECIO COMPRA </th> -->
+                                                            <th class="text-left"> PRECIO VENTA </th>
+                                                            <th class="text-left"> IGV </th>
+                                                            <th class="text-left"> SUB TOTAL </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr v-for="item in editedItemVentasP.details"
+                                                            :key="item.products_id">
+                                                            <td>{{ item.product_name }}</td>
+                                                            <td>{{ item.mark_name }}</td>
+                                                            <td>{{ item.quantity }}</td>
+                                                            <!-- <td>{{ item.product_purchase_price }}</td> -->
+                                                            <td>{{ item.price }}</td>
+                                                            <td>{{ item.igv }}</td>
+                                                            <td>{{ item.subTotal }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </template>
+                                            </v-simple-table>
+                                        </v-card-text>
+                                    </v-card>
+
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="green darken-1" text @click="dialog_viewVentasP = false">
+                                        Cerrar
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </v-row>
+                </template>
+                <!-- Fin Ver detalles Pago -->
 
                 <!-- Compras del Día -->
                 <v-tab-item> <br>
@@ -584,9 +680,10 @@ export default {
             searchV: '',
             searchC: '',
             searchP: '',
-            searchPa:'',
+            searchPa: '',
             calendarioConsulta: false,
             dialog_viewVentas: false,
+            dialog_viewVentasP: false,
             dialog_viewCompras: false,
             datInicio: this.dateInicio,
             datFin: this.dateFin,
@@ -652,16 +749,17 @@ export default {
                 { text: 'CLIENTE', value: 'customers_name' },
                 { text: 'TOTAL PAGO', value: 'amount' },
                 { text: 'MONEDA', value: 'coin' },
+                { text: 'ACCIONES', value: 'actions', sortable: false },
             ],
             dessertsPagos: [],
             editedIndexPagos: -1,
-            editedItemPagos: {
+            editedItemVentasP: {
                 date: '',
                 customers_name: '',
                 amount: '',
                 coin: '',
             },
-            defaultItemPagos: {
+            editedItemVentasP: {
                 date: '',
                 customers_name: '',
                 amount: '',
@@ -746,6 +844,11 @@ export default {
             this.editedIndexVentas = this.dessertsVentas.indexOf(item)
             this.editedItemVentas = Object.assign({}, item)
             this.dialog_viewVentas = true
+        },
+        viewItemP(item) {
+            this.editedIndexPagos = this.dessertsPagos.indexOf(item)
+            this.editedItemVentasP = Object.assign({}, item)
+            this.dialog_viewVentasP = true
         },
         viewItemC(item) {
             this.editedIndexCompras = this.dessertsCompras.indexOf(item)

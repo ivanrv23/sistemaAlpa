@@ -201,16 +201,41 @@ class ReportController extends Controller
                 ->where('orders.cash_registers_id', $cja)->where('orders.companies_id', $company)
                 ->whereBetween('account_receivable_details.date', [$DateAndTimeInicio, $DateAndTimeFin])
                 ->select(
+                    "orders.id AS idOrder",
+                    "orders.customers_id AS idCustomer",                    
+                    "orders.payment_methods_id AS idPayment",
+                    "orders.proof_payments_id AS idProof",
+                    "orders.coins_id AS idMoneda",
+                    "orders.exchange_rate AS exchange_rate",
+                    "orders.total AS total",
                     "account_receivable_details.date AS fecha",
-                    "orders.customers_id AS idEmpleado",
-                    "account_receivable_details.amount AS monto",
-                    "orders.coins_id AS idMoneda"
+                    "account_receivable_details.amount AS monto",                    
                 )->get()->map(function ($p) {
                     return [
                         'date' => $p->fecha,
-                        'customers_name' => Customer::find($p->idEmpleado)->name,
+                        'customers_name' => Customer::find($p->idCustomer)->name,
+                        'payment_method' => PaymentMethod::find($p->idPayment)->description,
+                        'proof_payment' => ProofPayment::find($p->idProof)->name,
                         'amount' => $p->monto,
                         'coin' => Coin::find($p->idMoneda)->code,
+                        'exchange_rate' => $p->exchange_rate,
+                        'total' => $p->total,
+                        'date_order' => $p->date,
+                        'details' => OrderDetail::where('orders_id', $p->idOrder)->get()->map(function ($d) {
+                            return [
+                                'id' => $d->id,
+                                'orders_id' => $d->orders_id,
+                                'products_id' => $d->products_id,
+                                'product_name' => Product::find($d->products_id)->name,
+                                'mark_name' => Mark::find(Product::find($d->products_id)->marks_id)->name,
+                                'product_purchase_price' => Product::find($d->products_id)->purchase_price,
+                                'quantity' => $d->quantity,
+                                'price' => $d->price,
+                                'discount' => $d->discount,
+                                'igv' => $d->igv,
+                                'subTotal' => $d->subTotal,
+                            ];
+                        }),
                     ];
                 }),
 
