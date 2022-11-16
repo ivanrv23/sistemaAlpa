@@ -59,7 +59,7 @@ class AccountReceivableController extends Controller
                             'orders_id' => $d->orders_id,
                             'products_id' => $d->products_id,
                             'product_name' => Product::find($d->products_id)->name,
-                            'marks_name' => Mark::find(Product::find($d->products_id)->id)->name,
+                            // 'marks_name' => Mark::find(Product::find($d->products_id)->id)->name,
                             'quantity' => $d->quantity,
                             'price' => $d->price,
                             'discount' => $d->discount,
