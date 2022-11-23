@@ -21,7 +21,7 @@ Este es un sistema de administradcion de ventas para empresas.
 
 - Clonar repositorio:
 ```sh
-git clone https://github.com/ayunierto/sysAdminEnterprise.git
+git clone https://github.com/ivanrv23/sistemaAlpa.git
 ```
 - Instalar las dependencias de PHP:
 ```sh
