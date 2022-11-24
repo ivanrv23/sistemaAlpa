@@ -121,13 +121,17 @@ class PurchaseController extends Controller
             'companies' => Company::all(),
             'providers' => Provider::where('companies_id', $company)->get(),
             'payment_methods' => PaymentMethod::all(),
-            'proof_payments' => ProofPayment::all(),
+            'proof_payments' => ProofPayment::where('code','!=', 'C01')->get(),
             'presentations' => Presentation::where('companies_id', $company)->get(),
             'coins' => Coin::all(),
-            'marks' => Mark::all(),
+            'marks' => Mark::where('companies_id', $company)->get(),
+            'warehouses' => Warehouse::where('companies_id', $company)->get(),
             'exchange_rate' => $exchange_rate,
             'documents' => Document::all(),
             'cajaChica' => $dstCajaChica,
+            'nroComprobantes' => sprintf("%08d", Purchase::where('companies_id', $company)->where('proof_payments_id', 1)->count() + 1),
+            'nroFacturas' => sprintf("%08d", Purchase::where('companies_id', $company)->where('proof_payments_id', 2)->count() + 1),
+            'nroBoletas' => sprintf("%08d", Purchase::where('companies_id', $company)->where('proof_payments_id', 3)->count() + 1),
             'products' => Product::where('companies_id', $company)->get()->map(function ($p) {
                 return [
                     'id' => $p->id,
@@ -137,6 +141,8 @@ class PurchaseController extends Controller
                     'marks' => Mark::where('id', $p->marks_id)->get(),
                     'measures_id' => $p->measures_id,
                     'providers_id' => $p->providers_id,
+                    'warehouses_id' => $p->warehouses_id,
+                    'warehouses' => Warehouse::where('id', $p->warehouses_id)->get(),
                     'warehouses_name' => Warehouse::find($p->warehouses_id)->name,
                     'name' => $p->name,
                     'type' => $p->type,
@@ -236,33 +242,78 @@ class PurchaseController extends Controller
                     }
                 }
             } else {
-                $purchase_details = new PurchaseDetail();
-                $purchase_details->companies_id         = $request->companies_id;
-                $purchase_details->purchases_id         = $purchase->id;
-                $purchase_details->products_id          = $value['productId'];
-                $purchase_details->amount               = $value['amount'];
-                $purchase_details->price                = $value['purchase_price'];
-                $purchase_details->transporte           = $value['transporte'];
-                $purchase_details->igv                  = $value['igv'];
-                $purchase_details->total                = $value['subTotal'];
+                if ($value['productMarksId'] != $value['marks_id'] || $value['productWarehousesId'] != $value['warehouses_id']) {
+                    // Obteniendo datos adicionales de producto
+                    $dProducto = Product::find($value['productId']);
+                    // Registrando producto con nueva marca
+                    $newProduct = new Product();
+                    $newProduct->companies_id = $dProducto->companies_id;
+                    $newProduct->warehouses_id = $value['warehouses_id'];
+                    $newProduct->categories_id = $dProducto->categories_id;
+                    $newProduct->marks_id = $value['marks_id'];
+                    $newProduct->measures_id = $dProducto->measures_id;
+                    $newProduct->providers_id = $dProducto->providers_id;
+                    $newProduct->type = $dProducto->type;
+                    $newProduct->name = $dProducto->name;
+                    $newProduct->save();
+                    // Detalle de venta
+                    $purchase_details = new PurchaseDetail();
+                    $purchase_details->companies_id         = $request->companies_id;
+                    $purchase_details->purchases_id         = $purchase->id;
+                    $purchase_details->products_id          = $newProduct->id;
+                    $purchase_details->amount               = $value['amount'];
+                    $purchase_details->price                = $value['purchase_price'];
+                    $purchase_details->transporte           = $value['transporte'];
+                    $purchase_details->igv                  = $value['igv'];
+                    $purchase_details->total                = $value['subTotal'];
+                    $purchase_details->save();
 
-                $purchase_details->save();
+                    // Actualizar el stock
+                    $dtsProducto = Product::find($newProduct->id);
+                    $cant = $value['amount'] * $value['equivalence'];
+                    if ($newProduct->type == 'Producto') {
+                        if ($value['sale_price'] > 0) {
+                            $dtsProducto->update([
+                                $dtsProducto->stock += $cant,
+                                $dtsProducto->purchase_price = $value['precio_compra'],
+                                $dtsProducto->sale_price = $value['sale_price'],
+                            ]);
+                        } else {
+                            $dtsProducto->update([
+                                $dtsProducto->stock += $cant,
+                                $dtsProducto->purchase_price = $value['precio_compra'],
+                            ]);
+                        }
+                    }
+                } else {
+                    $purchase_details = new PurchaseDetail();
+                    $purchase_details->companies_id         = $request->companies_id;
+                    $purchase_details->purchases_id         = $purchase->id;
+                    $purchase_details->products_id          = $value['productId'];
+                    $purchase_details->amount               = $value['amount'];
+                    $purchase_details->price                = $value['purchase_price'];
+                    $purchase_details->transporte           = $value['transporte'];
+                    $purchase_details->igv                  = $value['igv'];
+                    $purchase_details->total                = $value['subTotal'];
 
-                // Actualizar el stock
-                $dtsProducto = Product::find($value['productId']);
-                $cant = $value['amount'] * $value['equivalence'];
-                if ($value['type'] == 'Producto') {
-                    if ($value['sale_price'] > 0) {
-                        $dtsProducto->update([
-                            $dtsProducto->stock += $cant,
-                            $dtsProducto->purchase_price = $value['precio_compra'],
-                            $dtsProducto->sale_price = $value['sale_price'],
-                        ]);
-                    } else {
-                        $dtsProducto->update([
-                            $dtsProducto->stock += $cant,
-                            $dtsProducto->purchase_price = $value['precio_compra'],
-                        ]);
+                    $purchase_details->save();
+
+                    // Actualizar el stock
+                    $dtsProducto = Product::find($value['productId']);
+                    $cant = $value['amount'] * $value['equivalence'];
+                    if ($value['type'] == 'Producto') {
+                        if ($value['sale_price'] > 0) {
+                            $dtsProducto->update([
+                                $dtsProducto->stock += $cant,
+                                $dtsProducto->purchase_price = $value['precio_compra'],
+                                $dtsProducto->sale_price = $value['sale_price'],
+                            ]);
+                        } else {
+                            $dtsProducto->update([
+                                $dtsProducto->stock += $cant,
+                                $dtsProducto->purchase_price = $value['precio_compra'],
+                            ]);
+                        }
                     }
                 }
             }
